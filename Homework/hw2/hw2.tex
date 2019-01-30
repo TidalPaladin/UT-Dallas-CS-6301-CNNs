@@ -4,20 +4,19 @@
 \usepackage{amsfonts}
 \usepackage{graphicx}
 \usepackage{float}
+\usepackage{bm}
 %\usepackage{logicproof}
+\usepackage{mathtools}
+\DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
+\DeclarePairedDelimiter{\floor}{\lfloor}{\rfloor}
 
-
-
-
-\title{Homework 01 - Introduction}
+\title{Homework 02 - Linear Algebra}
 \author{
         Scott Chase Waggener \\
 		scw180000 \\
 		CS6301.503 Redfern
 }
-
 \date{\today}
-
 
 \renewcommand\thesubsection{\alph{subsection})}
 \renewcommand\thesection {Problem \arabic{section} }
@@ -30,6 +29,9 @@ As a Comet, I pledge honesty, integrity, and service in all that I do.
 \end{center}
 
 \section{}
+Complete
+
+\section{}
 When multiplying MxK and KxN matrices we will produce a MxN output matrix
 where each element was the result of a linear combination of K elements.
 As such, we must compute M*N sums of K elements.
@@ -37,9 +39,404 @@ Similarly, for memory operations we must bring in the original matrices and outp
 the resulting matrix, leading to a sum over the dimensions of these matrices.
 
 \begin{align}
+	\texttt{Compute} &= M N K \\
+	\texttt{Spatial} &= KN + MK + MN
+\end{align}
 
+The proof of maximum intensity is as follows:
 
+\begin{proof}
+	Let $N$ be the largest term of $N, M, K$ and let $I$ denote the arithmetic
+	intensity. Then we can express $M, K$ in terms of a factor of $N$.
 
+	\begin{align}
+		M = C_m N && K = C_k N && C_m, C_n \in \mathbb R^+
+	\end{align}
 
+	Since we let $N$ be the largest of the terms, $C_m, C_k$ must be on the
+	interval
+
+	\begin{equation}
+		0 < C_m, C_k \leq 1
+	\end{equation}
+
+	Then
+	\begin{align}
+		I &= M N K + \left(K N + M K + M N \right)\\
+		& = C_m C_k N^3 + C_m C_k N^2 + C_m N^2 + C_k N^2
+	\end{align}
+
+	In this form it is clear that for $N \in \mathbb N^+$ and $C_m, C_k$ on the
+	interval described above that $I$ will be maximized for
+
+	\begin{align}
+		C_m = 1 && C_k = 1
+	\end{align}
+
+	So
+
+	\begin{align}
+		M = C_m N = N && K = C_k N  = N
+	\end{align}
+\end{proof}
+
+\section{}
+
+The given dense layer involves multiplying a $N_o \times N_i$ feature extractor
+matrix with a $N_i$ vector. Under the BLAS notation we have
+
+\begin{align}
+	M = N_o = N_i && K = N_i && N = 1 \\
+\end{align}
+
+We can then use the result of Problem 2 to compute the intensity
+
+\begin{align}
+	\texttt{MAC}  &= M N K = N_i ^ 2\\
+	\texttt{Memory}  &= \left(K N + M K + M N \right) = N_i^2 + 2 N_i \\
+\end{align}
+
+Vectorizing the given inputs prodcues vectors of the following lengths
+
+\begin{align}
+	\texttt{MNIST}  &= (28 \times 28) &= 784 \\
+	\texttt{CIFAR}  &= (3 \times 32 \times 32) &= 3072 \\
+	\texttt{ImageNet}  &= (3 \times 224 \times 224) &= 150528 \\
+	\texttt{Quasi 1/4 HD}  &= (3 \times 512 \times 1024) &= 1572864 \\
+	\texttt{Quadi HD}  &= (3 \times 1024 \times 2048) &= 6291456 \\
+\end{align}
+
+Applying the derived total complexity
+
+\begin{align}
+	\texttt{MNIST}  &=  2(784^2 + 784) = 1230880\\
+	\texttt{CIFAR}  &=   2(3072 ^2 + 3072 ) = 18880512\\
+	\texttt{ImageNet}  &=   2(150528 ^2 + 150528 ) = 4.53e10\\
+	\texttt{Quasi 1/4 HD}  &=   2(1572864 ^2 + 1572864 ) = 4.95e12\\
+	\texttt{Quadi HD}  &=   2(6291456 ^2 + 6291456 ) = 7.92e13\\
+\end{align}
+
+\section{}
+
+Problem 3 indicates that this approach will be limited by the square of memory
+movement. Given that memory movement is much less efficient than compute on
+modern hardware, practical implementations of this approach will be
+very inefficient. The number of learned weights for this layer will also scale
+by $N_o * N_i$, making it dependent on the input and output size.
+\newline
+
+This approach would also fail to provide the translational invariance of a
+CNN-style 2D convolution layer. Furthermore, vectorizing a 2D input
+discards potentially valuable information about the structure of the input data.
+
+\section{}
+
+The dense layer would be incompatible with an input having $N_i'$ greater than
+the trained input $N_i$. For an input having $N_i'$ less than $N_i$ it may be
+possible to pad the smaller input to fit inside a $N_i$ vector, however this
+would likely produce poor results.
+
+\section{}
+
+We defined a CNN-style 2D convolution layer to be of the form
+
+\begin{equation}
+	\boldsymbol{Y}^{3D} =
+		f\left(\boldsymbol{H}^{4D} \otimes \boldsymbol{X}^{3D} +
+		\boldsymbol{V}^{3D}\right)
+\end{equation}
+
+As in class, we can expand the inner product term for a single output feature
+map $n_o \in \{0, 1, ... N_o\}$. To do this, we first construct
+$\boldsymbol{H}$ (written as $\boldsymbol{H}^T$ to save space) as
+
+\begin{align}
+	\boldsymbol{H}(n_o, N_i, F_r, F_c)^T =
+	\begin{bmatrix}
+		\boldsymbol{H}(n_o, N_i, 0, 0) \\
+		\boldsymbol{H}(n_o, N_i, 0, 1) \\
+		\boldsymbol{H}(n_o,N_i, 1, 0) \\
+		... \\
+		\boldsymbol{H}(n_o, N_i, F_r, F_c)
+	\end{bmatrix}
+\end{align}
+
+This expresses $\boldsymbol{H}$ for a single output feature map as a vector
+where each entry represents filter coefficient $f_r, f_c$ for each of $N_i$
+input feature maps.
+\newline
+
+Next we follow a similar process with $\boldsymbol{X}$.
+
+\begin{align}
+	\boldsymbol{X}(N_i, L_r, L_c) =
+	\begin{bmatrix}
+		\boldsymbol{X}(N_i, 0, 0) && \boldsymbol{X}(N_i, L_r-F_r, L_c-F_c) \\
+		\boldsymbol{X}(N_i, 0, 1) && \boldsymbol{X}(N_i, L_r-F_r, L_c-F_c+1)\\
+		\boldsymbol{X}(N_i, 1, 0) &...& \boldsymbol{X}(N_i, L_r-F_r+1, L_c-F_c)\\
+		... && ... \\
+		\boldsymbol{X}(N_i, F_r, F_c) && \boldsymbol{X}(N_i, L_r, L_c)\\
+	\end{bmatrix}
+\end{align}
+
+This result expresses $\boldsymbol{X}$ as a matrix. Each column of this matrix
+represents one $F_r \times F_c$ window through $N_i$ feature maps on which
+the feature extractor will act.
+
+From this result we can see that the shape of $\boldsymbol{X}$ will be of the
+form
+
+\begin{equation}
+	\boldsymbol{X} \in \mathbb{R}^{(F_r*F_c)\times((L_r-F_r+1)*(L_c-F_c+1))}
+\end{equation}
+
+\begin{equation}
+	M_r \times M_c = \big(L_r - F_r + 1\big) \times \big(L_c - F_c + 1 \big)
+\end{equation}
+
+Finally, we can convert this vector matrix multiplication to a matrix matrix
+multiplication by considering all output feature maps in $N_o$. We will then
+have a row in $\boldsymbol{H}$ for each $n_o \in N_o$.
+
+\section{}
+
+Since we are considering a single output point, we can neglect the input
+feature map size. Following the proof in problem 6, we can express the CNN
+style 2D convolution in terms of $(F_r * F_c)$ matrix matrix multiplications.
+However, we can neglect the matrix dimension $(M_r * M_c)$ since we are
+considering a single output point.
+
+\begin{align}
+	\bigg(N_o \times N_i\bigg) \otimes \bigg(N_i \times 1 \bigg)
+\end{align}
+
+This matrix matrix multiplication will require $N_o * N_i$ MACs, and we have a
+total of $(F_r * F_c)$ such multiplications to do. Thus for a single output
+point, the number of MACs is given by
+
+\begin{equation}
+	\texttt{MACs} = F_r * F_c * N_o * N_i
+\end{equation}
+
+\section{}
+
+First we will expand the result of problem 7 to all output points. This can be
+done by recognizing that we will have $M_r * M_c$ such output points on a
+feature map.
+
+\begin{align}
+	\texttt{MACs} &= F_r * F_c * N_o * N_i * M_r * M_c \\
+	&= F_r * F_c * N_o * N_i * \big(L_r - F_r + 1\big) * \big(L_c - F_c + 1\big)
+\end{align}
+
+So for MACs we have the following scaling
+
+\begin{align}
+	(L_r * L_c) &\rightarrow (L_r * L_c) &\texttt{linear}  \\
+	(F_r * F_c) &\rightarrow (F_r * F_c)^2 &\texttt{square} \\
+	(N_o * N_i) &\rightarrow (N_o * N_i) &\texttt{linear}
+\end{align}
+
+We follow a similar process for memory. The memory complexity for matrix matrix
+multiplication under BLAS notation is given by
+
+\begin{equation}
+	\texttt{Memory} = (M K + K N + M N)
+\end{equation}
+
+Under the lowering established in problem 6 we have
+
+\begin{align}
+	M = N_o && K = N_i && N = M_r * M_c
+\end{align}
+
+So for one of $F_r * F_c$ matrix matrix multiplications we have memory
+complexity
+
+\begin{align}
+	\texttt{Memory}_{f_r, f_c} = N_o * N_i + N_i * M_r * M_c + N_o * M_r * M_c
+\end{align}
+
+And in total
+
+\begin{align}
+	\texttt{Memory} = F_r * F_c \bigg(N_o * N_i + N_i * M_r * M_c + N_o * M_r *
+	M_c\bigg)
+\end{align}
+
+Which gives the following scaling
+
+\begin{align}
+	(L_r * L_c) &\rightarrow (L_r * L_c) &\texttt{linear}  \\
+	(F_r * F_c) &\rightarrow (F_r * F_c)^2 &\texttt{square} \\
+	(N_o * N_i) &\rightarrow (N_o * N_i) &\texttt{linear}
+\end{align}
+
+\section{}
+
+Padding input such that the output size is the same as the input size is half
+padding. For unit strides, half padding will require $P = \lfloor F / 2
+\rfloor$. For the given example we have
+
+\begin{align}
+	P_r = \floor[\bigg]{\frac{F_r}{2}} && P_c = \floor[\bigg]{\frac{F_c}{2}}
+\end{align}
+
+Substituting the given cases we have
+
+\begin{align}
+	F_r=F_c=0, &&
+	P_r = P_c = \floor[\bigg]{\frac{0}{2}} = 0 \\
+	F_r=F_c=3, &&
+	P_r = P_c =  \floor[\bigg]{\frac{3}{2}} = 1 \\
+	F_r=F_c=5, &&
+	P_r = P_C = \floor[\bigg]{\frac{5}{2}} = 2
+\end{align}
+
+\section{}
+
+Given an input of shape $L_r \times L_C$ will produce an output with
+$N_o$ number of $M_r \times M_c$ feature maps where
+
+\begin{align}
+	M_r = L_r - F_r + 1 && M_c = L_c - F_c + 1
+\end{align}
+
+If we pad the input with
+
+\begin{align}
+	P_r = F_r - 1 && P_c = F_c - 1
+\end{align}
+
+Then we will have an input of shape
+
+\begin{align}
+	N_o \times (L_r + 2 P_r) \phantom{-2} &\times (L_c + 2 P_c)\\
+	N_o \times (L_r + 2 F_r - 2) &\times (L_c + 2 F_c - 2)\\
+\end{align}
+
+Based on this, we have
+
+\begin{align}
+	\begin{aligned}
+		M_r' &= L_r' - F_r + 1 \\
+		M_r' &= (L_r+2F_r-2) - F_r + 1\\
+		M_r' &= L_r+F_r - 1 \\
+	\end{aligned}
+	&&
+	\begin{aligned}
+		M_c' &= L_c' - F_c + 1 \\
+		M_c' &= (L_c+2F_c-2) - F_c + 1 \\
+		M_c' &= L_c+F_c - 1
+	\end{aligned}
+\end{align}
+
+For a stride of $1$ the size of a single output feature map $n_o \in N_o$ will
+be
+
+\begin{equation}
+	\big(L_r+F_r-1\big)\times\big(L_c+F_c-1\big)
+\end{equation}
+
+For a stride of $2$ we will take $\lfloor (L_r - F_r + 2p)/2 \rfloor$ steps plus $1$ for
+the initial position to traverse a row. This leads to
+
+\begin{align}
+\end{align}
+
+\section{}
+
+In the case of a $3 \times 512 \times 1024$ input it would be possible to
+upsample this input to the expected $3 \times 1024 \times 2048$ via
+interpolation without compromising the original input.
+\newline
+
+For a $3 \times 512 \times 512$ input the results would be questionable as the
+original image is not in the same aspect ratio as the expected input.
+
+\section{}
+
+The RNN layer has the form
+
+\begin{align}
+	\boldsymbol{y}_t &= f(\boldsymbol{H}\boldsymbol{x}_t +
+	\boldsymbol{G}\boldsymbol{y}_{t-1} + \boldsymbol{v}) \\
+	\boldsymbol{H} &\in \mathbb{R}^{M \times K} \\
+	\boldsymbol{x} &\in \mathbb{R}^{K \times 1} \\
+	\boldsymbol{G} &\in \mathbb{R}^{M \times M} \\
+	\boldsymbol{y} &\in \mathbb{R}^{M \times 1}
+\end{align}
+
+First recognize that in this form, the input to the activation function will be
+that of a dense layer plus some update vector.
+Now consider the case when the state update matrix $\boldsymbol{G}$ is not
+constrained to a diagonal. In this case each element of the update vector will
+be a linear combination of outputs from the previous iteration, ie
+
+\begin{align}
+	\boldsymbol{G}\boldsymbol{y}_{t-1}
+	&=
+	\begin{aligned}
+		\begin{bmatrix}
+			g_{11} & g_{12} & \cdots & g_{1M} \\
+			g_{21} & g_{22} & \cdots & g_{2M} \\
+			\vdots & \vdots & \ddots & \vdots \\
+			g_{M1} & g_{M2} & \cdots & g_{MM}
+		\end{bmatrix}
+		\begin{bmatrix}
+			y^{t-1}_{1} \\
+			y^{t-1}_{2} \\
+			\vdots \\
+			y^{t-1}_{M}
+		\end{bmatrix}
+	\end{aligned}
+	\\
+	&=
+	\begin{aligned}
+		\begin{bmatrix}
+			g_{11}*y^{t-1}_{1} + g_{12}*y^{t-1}_{2} + \cdots + g_{1M}*y^{t-1}_{M} \\
+			g_{21}*y^{t-1}_{1} + g_{22}*y^{t-1}_{2} + \cdots + g_{2M}*y^{t-1}_{M} \\
+			\vdots \\
+			g_{M1}*y^{t-1}_{1} + g_{M2}*y^{t-1}_{2} + \cdots + g_{MM}*y^{t-1}_{M} \\
+		\end{bmatrix}
+	\end{aligned}
+\end{align}
+
+When $\boldsymbol{G}$ is constrained to the diagonal we retain only one term in
+the linear combination that compries each vector element, giving
+
+\begin{equation}
+	\boldsymbol{G}\boldsymbol{y}_{t-1}
+	=
+	\begin{bmatrix}
+		g_{11}*y^{t-1}_{1} \\
+		g_{22}*y^{t-1}_{2} \\
+		\vdots \\
+		g_{MM}*y^{t-1}_{M} \\
+	\end{bmatrix}
+\end{equation}
+
+The intuition behind this is that by choosing a diagonal $\boldsymbol{G}$ we
+can force output feature $m_i \in \boldsymbol{y}$ in iteration $t$
+to have a memory dependency
+only on the value of $m_i$ in iteration $t-1$, rather than depending on
+all output features $m \in \boldsymbol{y}$ in iteration $t-1$.
+
+\section{}
+
+In this example we have an input of $N_i = 1024$ feature maps, each of size $16
+\times 32$. Global average pooling layers output a single average value for
+each feature map, so the size of the output will be a single vector of length
+$N_i=1024$.
+\newline
+
+Computing the output of the global pooling layer will require MACs equal to the
+product of the input dimensions, ie
+
+\begin{align}
+	\texttt{MACs} &= N_i * L_r * L_c \\
+	&= 1024 * 16 * 32 \\
+	&= 524288
+\end{align}
 
 \end{document}
