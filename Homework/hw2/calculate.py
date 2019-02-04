@@ -19,7 +19,9 @@ if __name__ == '__main__':
     ]
 
     for inp in inputs:
-        print('Memory: %i' % memory_dense(inp) )
-        print('Compute: %i' % compute_dense(inp) )
-        print('Total: %i' % (compute_dense(inp) + memory_dense(inp)) )
+        print(inp)
+        print('Memory: %.2E' % memory_dense(inp) )
+        print('Compute: %.2E' % compute_dense(inp) )
+        print('Total: %.2E' % (compute_dense(inp) + memory_dense(inp)) )
+        print('\n')
 

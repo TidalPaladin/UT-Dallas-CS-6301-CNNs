@@ -118,16 +118,14 @@ Applying the derived total complexity
 
 \section{}
 
-Problem 3 indicates that this approach will be limited by the square of memory
-movement. Given that memory movement is much less efficient than compute on
+The result of the previous problem indicates that we have a $O(N^2)$
+complexity for both memory movement and compute.
+Given that memory movement is much less efficient than compute on
 modern hardware, practical implementations of this approach will be
-very inefficient. The number of learned weights for this layer will also scale
-by $N_o * N_i$, making it dependent on the input and output size.
-\newline
-
-This approach would also fail to provide the translational invariance of a
-CNN-style 2D convolution layer. Furthermore, vectorizing a 2D input
-discards potentially valuable information about the structure of the input data.
+very inefficient. Our ideal solution would maximize the number of compute
+operations made for each memory movement. Furthermore, vectorizing
+a 2D input discards potentially valuable information about the
+structure of the input data.
 
 \section{}
 
@@ -142,16 +140,39 @@ We defined a CNN-style 2D convolution layer to be of the form
 
 \begin{equation}
 	\boldsymbol{Y}^{3D} =
-		f\left(\boldsymbol{H}^{4D} \otimes \boldsymbol{X}^{3D} +
+		f\left(\boldsymbol{H}^{4D} \circledast \boldsymbol{X}^{3D} +
 		\boldsymbol{V}^{3D}\right)
 \end{equation}
 
-As in class, we can expand the inner product term for a single output feature
-map $n_o \in \{0, 1, ... N_o\}$. To do this, we first construct
-$\boldsymbol{H}$ (written as $\boldsymbol{H}^T$ to save space) as
+Let us attempt to create the following matrix mapping
 
 \begin{align}
-	\boldsymbol{H}(n_o, N_i, F_r, F_c)^T =
+	\boldsymbol{H}^{4D} \rightarrow \boldsymbol{H}^{2D} \\
+	\boldsymbol{X}^{3D} \rightarrow \boldsymbol{X}^{2D}
+\end{align}
+
+For $\boldsymbol{H}^{4D}$ we can triviallly rehape to a matrix of shape
+
+\begin{equation}
+	\boldsymbol{H}^{2D} \in \mathbb{R}^{N_o \times \big(N_i * F_r * F_c\big)}
+\end{equation}
+
+by flattening along $N_i, F_r, F_c$. For $\boldsymbol{X}$
+
+\begin{equation}
+	\boldsymbol{X}^{2D} \in \mathbb{R}^{N_i \times (L_r *L_c)}
+\end{equation}
+
+\begin{equation}
+	\boldsymbol{Z}(n) =
+	\boldsymbol{H}_n^{3D} \circledast \boldsymbol{X}_n^{2D}
+\end{equation}
+
+Next construct $\boldsymbol{H}$ (written as $\boldsymbol{H}^T$ to save space)
+for $n_o$ as
+
+\begin{align}
+	\boldsymbol{H}(n_o)^T =
 	\begin{bmatrix}
 		\boldsymbol{H}(n_o, N_i, 0, 0) \\
 		\boldsymbol{H}(n_o, N_i, 0, 1) \\
