@@ -22,7 +22,7 @@
 
 % =========================================================
 \begin{document}
-\HomeworkHeader{2}{1}% homework number, problem number
+\HomeworkHeader{2 (Linear Algebra)}{1}% homework number, problem number
 % ---------------------------------------------------------
 Read: A guide to convolution arithmetic for deep learning.
 \begin{solution}
@@ -30,7 +30,7 @@ Read: A guide to convolution arithmetic for deep learning.
 \end{solution}
 
 % ---------------------------------------------------------
-\HomeworkHeader{2}{2}% homework number, problem number
+\HomeworkHeader{2 (Linear Algebra)}{2}% homework number, problem number
 % ---------------------------------------------------------
 \begin{enumerate}[(a)]\itemsep0pt
   \item
@@ -51,7 +51,7 @@ Read: A guide to convolution arithmetic for deep learning.
 \end{solution}
 
   \item
-	  Prove that arithmetic intensity for matrix matrix multplication is
+	  Prove that arithmetic intensity for matrix matrix multiplication is
 		maximized when $M=N=K$.
 	\begin{proof}
 		Choose $N$ such that it is the largest matrix dimension. Let $I(M, N,
@@ -97,7 +97,7 @@ Read: A guide to convolution arithmetic for deep learning.
 \end{enumerate}
 
 % ---------------------------------------------------------
-\HomeworkHeader{2}{3}% homework number, problem number
+\HomeworkHeader{2 (Linear Algebra)}{3}% homework number, problem number
 % ---------------------------------------------------------
 What is the complexity (MACs and memory) of a $N_o = N_i$ dense layer applied
 to vectorized versions of the following inputs:
@@ -169,7 +169,7 @@ From the result of Problem 2 we have
 \end{align}
 
 % ---------------------------------------------------------
-\HomeworkHeader{2}{4}% homework number, problem number
+\HomeworkHeader{2 (Linear Algebra)}{4}% homework number, problem number
 % ---------------------------------------------------------
 In practice, why can't you flatten a quasi HD input image to a vector for input
 to a dense layer
@@ -179,15 +179,20 @@ to a dense layer
 
 	The results of Problem 3 illustrate how arithmetic intensity for vectorized
 	image inputs to a dense layer grows rapidly, reaching tens of trillions of
-	operations. Furthermore, the use of matrix
+	operations. This level of arithmetic intensity for large inputs is
+	impractical on today's hardware. Furthermore, the use of matrix
 	vector multiplication (as opposed to matrix matrix for CNN style 2D
 	convolution layers) creates a constant factor ratio of compute to memory
 	intensity. This leads to a memory wall, as memory movement operations are
-	much slower than compute operations.
+	much slower than compute operations. It is also worth noting that dense
+	layers acting on a vectorized 3D input will have no information about the
+	topology of the true input, and will be forced to look for relationships
+	between features that are separated by a great distance in the original
+	input.
 \end{solution}
 
 % ---------------------------------------------------------
-\HomeworkHeader{2}{5}% homework number, problem number
+\HomeworkHeader{2 (Linear Algebra)}{5}% homework number, problem number
 % ---------------------------------------------------------
 Can a dense layer trained on an input of $1024\times1$ be applied to an input
 of size $2048\times1$ or $512\times1$
@@ -196,63 +201,109 @@ of size $2048\times1$ or $512\times1$
 \begin{solution}
 	No to both. Dense layers learn weights such that a component in the output
 	vector has a variable dependency on each of items in the input vector. The
-	alterations needed to accomodate inputs of varying size would likely
+	alterations needed to accommodate inputs of varying size would likely
 	reduce the validity of the layer's output.
 \end{solution}
 
 % ---------------------------------------------------------
-\HomeworkHeader{2}{6}% homework number, problem number
+\HomeworkHeader{2 (Linear Algebra)}{6}% homework number, problem number
 % ---------------------------------------------------------
-Can a dense layer trained on an input of $1024\times1$ be applied to an input
-of size $2048\times1$ or $512\times1$
+Prove that CNN style 2D convolution with $N_o \times N_i \times F_r \times F_c$
+filter, $N_i \times L_r \times L_c$ input and $N_o \times M_r \times M_c$
+output can be lowered to the sum of $(F_r * F_c)$ matrix matrix multiplications.
 % ---------------------------------------------------------
 
 \begin{proof}
-	Let this
+	Let the CNN style 2D convolution layer be of the usual form
+	\begin{align}
+		\boldsymbol{Y}^{3D} &= \boldsymbol{H}^{4D}\boldsymbol{X}^{3D} +
+		\boldsymbol{V}^{3D}
+	\end{align}
+
+	If we consider a single output point $m_r \in M_r, m_c \in M_c$
+	of a single output feature map $n_o \in N_o$
+	we can express this as
+
+	\begin{align}
+		Y(n_o, m_r, m_c) &= \sum_{n_i}^{N_i}\sum_{f_r}^{F_r}\sum_{f_c}^{F_c}
+		H(n_o, n_i, f_r, f_c)\ X(n_i, m_r + f_r, m_c + f_c)
+	\end{align}
+
+	If we expand the summation over $n_i$ only we get a vector vector
+	multiplication as follows
+
+	\begin{align}
+		Y(n_o, m_r, m_c) &= \sum_{f_r}^{F_r}\sum_{f_c}^{F_c}
+		\begin{bmatrix}
+			H(n_o, 0, f_r, f_c) \\ H(n_o, 1, f_r, f_c) \\ \cdots \\ H(n_o, N_i, f_r, f_c)
+		\end{bmatrix}^T
+		\begin{bmatrix}
+			X(0, f_r, f_c) \\ X(1, f_r, f_c) \\ \cdots \\ X(N_i, f_r, f_c)
+		\end{bmatrix}
+	\end{align}
+
+	We must next generalize this to all output points of all feature maps. If
+	we extend row vector $H$ into a matrix by adding $N_o$ rows for
+	$n_o \in N_o$, and if we
+	extend column vector $X$ into a matrix by adding $M_r \times M_c$ columns
+	for the Cartesian product combinations of $m_r, m_c$, we get the following
+
+	\begin{align}
+		Y &= \sum_{f_r}^{F_r}\sum_{f_c}^{F_c}
+		\underbrace{
+			\begin{bmatrix}
+				H(0, 0, f_r, f_c) &  \cdots &
+					H(0, N_i,f_r, f_c) \\
+				\vdots & \ddots & \vdots \\
+				H(N_o, 0, f_r, f_c) &  \cdots &
+				H(N_o, N_i,f_r, f_c)
+			\end{bmatrix}
+		}_{N_o \times N_i}
+		\underbrace{
+			\begin{bmatrix}
+				X(0, f_r, f_c) & \cdots & X(0, f_r+M_r, f_c+M_c) \\
+				\vdots & \ddots & \vdots \\
+				X(N_i, f_r, f_c) & \cdots & X(N_i, f_r+M_r, f_c+M_c)
+			\end{bmatrix}
+		}_{N_i \times M_r * M_C}
+	\end{align}
+
+	From here we need only trivially reshape $Y$ from a 2D matrix into a $3D$
+	tensor. The expression above indicates that CNN style 2D convolution can be
+	lowered to a sum of $F_r * F_c$ matrix matrix multiplications. Furthermore,
+	this result suggests that there are many alternative lowerings possible
+	where each is determined by the which summations are expanded.
+
 \end{proof}
 
 % ---------------------------------------------------------
-\HomeworkHeader{2}{7}% homework number, problem number
+\HomeworkHeader{2 (Linear Algebra)}{7}% homework number, problem number
 % ---------------------------------------------------------
 How many MACs are required to compute each output point in a CNN style 2D
 convolution layer $N_o \times N_i \times F_r \times F_c$
 % ---------------------------------------------------------
 
 \begin{solution}
-	From the result of the previous problem we know that the CNN style 2D
-	convolution layer can be lowered to the sum of $F_r * F_c$ matrix matrix
-	between matrices of the following dimensions in BLAS notation.
+	In an intermediate step of Problem 6 we expressed a single output point as
+	a summation as follows
 
 	\begin{align}
-		M=&N_o & K&=N_i & N&=M_r \times M_c
+		Y(n_o, m_r, m_c) &= \sum_{n_i}^{N_i}\sum_{f_r}^{F_r}\sum_{f_c}^{F_c}
+		H(n_o, n_i, f_r, f_c)\ X(n_i, m_r + f_r, m_c + f_c)
 	\end{align}
 
-	This gives the total number of MACs for all output points as
-
-	\begin{align}
-		\texttt{Compute} &= (F_r * F_c) * M * N * K \\
-		&= F_r * F_c * N_o * N_i * M_r * M_c \\
-	\end{align}
-
-	For a single output point we discard factors $N_o, M_r, M_c$ since we are
-	considering a single output point in one output feature map. This is
-	similar to conducting $F_r * F_c$ vector vector multiplications where the
-	vectors are of length $N_i$. In either case the number of MACs for a single
-	output point is given by
+	Recall that this summation can be expanded to an inner product with vectors
+	of length $N_i * F_r * F_c$. We know trivially that the number of MACs for
+	this operation will be given by
 
 	\begin{align}
 		\texttt{Compute}_1 &= F_r * F_c * N_i
 	\end{align}
 
-	This result makes intuitive sense. To compute a single output point we
-	multiply each of $F_r * F_c$ filter weights by the the input values across
-	$N_i$ feature maps and acculmulate to a single output point of a single
-	output feature map.
-
 \end{solution}
 
 % ---------------------------------------------------------
-\HomeworkHeader{2}{8}% homework number, problem number
+\HomeworkHeader{2 (Linear Algebra)}{8}% homework number, problem number
 % ---------------------------------------------------------
 How does CNN style 2D convolution complexity (MACs and memory) scale as a
 function of
@@ -281,18 +332,22 @@ function of
 		\end{solution}
 \end{enumerate}
 
-We have already established the number of MACs in a CNN style 2D convolution
-layer which clearly scales linearly for all the given alterations. Memory
-movement for the same layer is given by
+From previous problems we know that MACs are determined by
 
 \begin{align}
-	N_i L_r L_c + N_o M_r M_c + N_i N_o F_r F_c
+	\texttt{Compute} = N_i * F_r * F_c * N_o * M_r * M_c
 \end{align}
 
-Which again scales linearly for all of the given inputs
+and memory is determined by
+
+\begin{align}
+	\texttt{Memory} = N_i L_r L_c + N_o M_r M_c + N_i N_o F_r F_c
+\end{align}
+
+Both of these
 
 % ---------------------------------------------------------
-\HomeworkHeader{2}{9}% homework number, problem number
+\HomeworkHeader{2 (Linear Algebra)}{9}% homework number, problem number
 % ---------------------------------------------------------
 Consider a CNN style 2D convolution layer with filter size $N_o \times N_i
 \times F_r \times F_c$.
@@ -306,6 +361,17 @@ Consider a CNN style 2D convolution layer with filter size $N_o \times N_i
 			is given by
 			\begin{align}
 				P_l+P_r&=F_c-1 & P_t+P_b&=F_r-1
+			\end{align}
+
+			This can easily be confirmed by realizing that
+			\begin{align}
+				M_r &= (L_r+P_r) - F_r + 1 \\
+			\end{align}
+
+			So total padding along rows is given by
+			\begin{align}
+				M_r = L_r \implies L_r &= L_r + P_r - F_r + 1 \\
+				\implies P_r &= F_r - 1
 			\end{align}
 		\end{solution}
 	\item What is the size of the border of $0$s for $F_r=F_c=1$?
@@ -333,7 +399,7 @@ Consider a CNN style 2D convolution layer with filter size $N_o \times N_i
 \end{enumerate}
 
 % ---------------------------------------------------------
-\HomeworkHeader{2}{10}% homework number, problem number
+\HomeworkHeader{2 (Linear Algebra)}{10}% homework number, problem number
 % ---------------------------------------------------------
 Consider a CNN style 2D convolution layer with filter size $N_o \times N_i
 \times F_r \times F_c$, input $N_i \times L_r \times L_c$, $P_r = F_r-1$ and
@@ -343,23 +409,53 @@ $P_c=F_c-1$.
 \begin{enumerate}[(a)]\itemsep0pt
 	\item What is the size of the output feature map with striding $S_r=S_c=1$
 		\begin{solution}
-			$M_r \times M_c = (L_r - F_r + 1)\times(L_c - F_c + 1)$
+			\begin{align}
+				M_r &= L_r
+				&
+				M_c &= L_c
+			\end{align}
+
+			Using a modified form of Relationship 6 in the reading we can write
+			\begin{align}
+				M_r &= \bigg\lfloor \frac{L_r + P_r - F_r}{S_r} \bigg\rfloor + 1
+				\\
+				&= \bigg\lfloor \frac{L_r + (F_r-1) - F_r}{S_r} \bigg\rfloor + 1
+				\\
+				&= \bigg\lfloor \frac{L_r - 1}{S_r} \bigg\rfloor + 1
+			\end{align}
+
+			Symmetry in the given input values allows this result to be
+			extended to $M_c$. For a stride of one and padding given by filter
+			dimension minus one, we get the expected result of $M_r = L_r$
+
 		\end{solution}
 	\item What is the size of the output feature map with striding $S_r=S_c=2$
 		\begin{solution}
-			$\frac{M_r}{2} \times \frac{M_c}{2} = (L_r - F_r + 1)\times(L_c - F_c + 1)$
+			\begin{align}
+				M_r &= \bigg\lfloor \frac{L_r - 1}{2} \bigg\rfloor + 1
+				&
+				M_c &= \bigg\lfloor \frac{L_c - 1}{2} \bigg\rfloor + 1
+			\end{align}
+
+			We use the result of the previous part with $S_r = S_c = 2$
+
+
 		\end{solution}
 	\item How does this change the shape of the equivalent lowered matrix
 		equation
 		\begin{solution}
 			In the equivalent lowered matrix matrix operation, striding alters
-			the matrix of shape $N_i \times (M_r * M_c)$, dividing $M_r, M_c$
-			by $S_r, S_c$ respectively.
+			the input matrix of shape $N_i \times (M_r * M_c)$.
+			Values $M_r, M_c$ are divided by $S_r, S_c$ respectively. This in
+			turn alters the shape of the output matrix in a similar way.
+			Intuitively, striding is a downsampling operation where the input
+			feature map is roughly downsampled by a factor of $S_r, S_c$
+			along $L_r, L_c$ respectively.
 		\end{solution}
 \end{enumerate}
 
 % ---------------------------------------------------------
-\HomeworkHeader{2}{11}% homework number, problem number
+\HomeworkHeader{2 (Linear Algebra)}{11}% homework number, problem number
 % ---------------------------------------------------------
 Can a CNN style 2D convolution layer trained on an input of size
 $3 \times 1024 \times 2048$ be applied to an input of size:
@@ -370,6 +466,13 @@ $3 \times 1024 \times 2048$ be applied to an input of size:
 		\begin{solution}
 			Yes, there are upsampling techniques like deconvolution or
 			interpolation that could be used.
+
+			This is the strength of CNN style 2D convolution layers. Since each
+			output point is determined by input points exposed to the filter
+			kernel at a given position, there will be no dependencies between
+			distant points in the input feature map. Upsampling and
+			downsampling can be applied to an input without compromising the
+			validity of outputs from the CNN layer.
 		\end{solution}
 	\item $3\times 512 \times512$
 		\begin{solution}
@@ -379,29 +482,70 @@ $3 \times 1024 \times 2048$ be applied to an input of size:
 \end{enumerate}
 
 % ---------------------------------------------------------
-\HomeworkHeader{2}{12}% homework number, problem number
+\HomeworkHeader{2 (Linear Algebra)}{12}% homework number, problem number
 % ---------------------------------------------------------
 In a standard RNN, if the state update matrix is constrained to a diagonal,
 what does this do for the mixing of the previous state with new inputs.
 % ---------------------------------------------------------
 
 \begin{solution}
-	It forces an output element $y_i$ to depend only on its value in the
-	previous state.
+	It forces an output element $y_i$ to depend only on the value of $y_i$ at
+	time $t-1$, rather than all outputs at time $t-1$.
 	\newline
+
+	An RNN layer is given by
+
+	\begin{align}
+		\boldsymbol{y}_t = \boldsymbol{H}\boldsymbol{X} +
+		\boldsymbol{G}\boldsymbol{y}_{t-1} + \boldsymbol{V}
+	\end{align}
 
 	The state update matrix $\boldsymbol{G}$ acts on vector
 	$\boldsymbol{y}_{t-1}$ which was produced by the previous RNN state. For
 	non-diagonal $\boldsymbol{G}$ this will produce a vector of length $N$
 	where each element is a linear combination of all outputs from the previous
-	state.
+	state, as follows
+
+	\begin{align}
+		\boldsymbol{G}\boldsymbol{y}_{t-1} =
+		\begin{pmatrix}
+			G_{00}y^{t-1}_{0} + G_{01}y^{t-1}_{1} + \dots +
+			G_{0 N_o}y^{t-1}_{N_o}
+			\\
+			G_{10}y^{t-1}_{0} + G_{11}y^{t-1}_{1} + \dots +
+			G_{0 N_o}y^{t-1}_{N_o}
+			\\
+			\vdots
+			\\
+			G_{N_o 0}y^{t-1}_{0} + G_{N_o 1}y^{t-1}_{1} + \dots +
+			G_{N_o N_o}y^{t-1}_{N_o}
+		\end{pmatrix}
+	\end{align}
+
+
 	Constraining $\boldsymbol{G}$ to the diagonal means that a given output
 	$y_i \in \boldsymbol{y}$ will be determined only be a scaled factor of $y_i
-	\in \boldsymbol{y}_{t-1}$.
+	\in \boldsymbol{y}_{t-1}$ as follows
+
+	\begin{align}
+		\boldsymbol{G}\boldsymbol{y}_{t-1} =
+		\begin{pmatrix}
+			G_{00}y^{t-1}_{0}
+			\\
+			G_{11}y^{t-1}_{1}
+			\\
+			\vdots
+			\\
+			G_{N_o N_o}y^{t-1}_{N_o}
+		\end{pmatrix}
+	\end{align}
+
+	It is clear that in the addition of column vectors there will be no
+	interplay between different output features.
 \end{solution}
 
 % ---------------------------------------------------------
-\HomeworkHeader{2}{13}% homework number, problem number
+\HomeworkHeader{2 (Linear Algebra)}{13}% homework number, problem number
 % ---------------------------------------------------------
 The size of the input to the global average pooling layer is
 $1024\times16\times32$.
@@ -412,9 +556,9 @@ $1024\times16\times32$.
 			$1024 \times 1$
 
 			The global average pooling layer computes a global average for each
-			of the input feature maps. As such, we will reduce $1024$ feature
-			maps of size $16\times32$ to an average of those $16\times32$
-			features for each feature map.
+			of the input feature maps. As such, we will average
+			feature maps of size $16\times32$ to a single value, repeated for
+			each of the $1024$ given feature maps.
 		\end{solution}
 	\item What is the complexity (MACs) of the layer
 		\begin{solution}
@@ -424,15 +568,17 @@ $1024\times16\times32$.
 					&= 524288 \\
 			\end{align}
 
-			Global average pooling can be thought of as a matrix matrix
+			Global average pooling can be thought of as a matrix vector
 			multiplication with the following BLAS dimensions
 
 			\begin{align}
 				M &= N_i & K &= L_r * L_c & N &= 1
 			\end{align}
 
-			We can then compute the familiar MAC count for matrix matrix
-			(really matrix vector in this case) multiplication.
+			where the $K\times N$ matrix has each value set to $1/(L_r * L_c)$
+			for averaging. Based on this interpretation we can determine the
+			complexity of the layer.
+
 		\end{solution}
 \end{enumerate}
 \end{document}
