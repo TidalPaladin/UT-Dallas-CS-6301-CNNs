@@ -1,0 +1,168 @@
+% ---------
+%  Compile with "pdflatex hw1".
+% --------
+%!TEX TS-program = pdflatex
+%!TEX encoding = UTF-8 Unicode
+
+% Template borrowed from Jeff Erickson.
+
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}		% Allow some non-ASCII Unicode in source
+\usepackage{jeffe, handout,graphicx}
+\usepackage{forest}
+\newcommand{\pd}{\partial}
+\newcommand{\bs}{\boldsymbol}
+
+% =========================================================
+%   Define common stuff for solution headers
+% =========================================================
+\Class{CS 6301.503}
+\Semester{Spring 2019}
+\Authors{1}
+\AuthorOne{Scott C. Waggener}{scw180000}
+%\Section{}
+
+% =========================================================
+\begin{document}
+\HomeworkHeader{3 (Calculus)}{1}% homework number, problem number
+% ---------------------------------------------------------
+Honor statement:
+\newline
+
+\noindent
+Read:
+\begin{solution}
+	Complete
+\end{solution}
+
+% =========================================================
+\HomeworkHeader{3 (Calculus)}{2}% homework number, problem number
+% ---------------------------------------------------------
+Read:
+\begin{solution}
+	Complete
+\end{solution}
+
+% =========================================================
+\HomeworkHeader{3 (Calculus)}{3}% homework number, problem number
+% ---------------------------------------------------------
+Read:
+\begin{solution}
+	Complete
+\end{solution}
+
+% =========================================================
+\HomeworkHeader{3 (Calculus)}{4}% homework number, problem number
+% ---------------------------------------------------------
+Let $\boldsymbol{x}$ be the $K \times 1$ vector output of the last layer of a
+xNN and
+$e = \text{crossEntropy}(\boldsymbol{p}^*,\text{softMax}(\boldsymbol{x}))$
+be the error where $\boldsymbol{p}^*$ is a $K \times 1$ vector with a $1$ in
+position $k^*$ representing the correct class and $0$s elsewhere. Derive
+$\pd e/ \pd\boldsymbol{x}$
+
+\begin{solution}
+	\begin{align}
+		\frac{\partial e}{\partial \boldsymbol{x}} = \text{?}
+	\end{align}
+\end{solution}
+
+\begin{proof}
+	First, note that error function $e$ is given by the cross entropy of a
+	softmax, the typical error function chosen for \textbf{classification}
+	networks. This establishes a $f(g(x))$ relationship wherein we must use the
+	chain rule to differentiate $e$. Specifically, we will need to compute the
+	following to apply the chain rule
+
+	\begin{align}
+		\frac{d}{d \bs{x}} \text{softMax}(\bs{x})
+		&&
+		\frac{\pd}{\pd \bs{p}} \text{crossEntropy}(\bs{p}^*, \bs{p})
+	\end{align}
+
+	We will start with cross entropy. Recall that cross entropy is given by
+
+	\begin{align}
+		\text{crossEntropy}(\boldsymbol{p}^*, \boldsymbol{p})
+		&=
+		-\sum_{x_i\in\boldsymbol{x}} p^*(x_i) \log p(x_i)
+	\end{align}
+
+	Differentiating cross entropy for each of $x_i \in \bs{x}$ produces a
+	gradient vector. Recognizing that differentiating the summation in cross
+	entropy with respect to a single $x_i$ will produce a single nonzero term,
+	we can say
+
+	\begin{align}
+		\nabla_{\bs{x}}\bigg(-\sum_{x_i\in\bs{x}} p^*(x_i) \log p(x_i)\bigg)
+ 		&=
+		\begin{pmatrix}
+			-\frac{\pd}{\pd x_1} p^*(x_1) \log p(x_1)\\
+			-\frac{\pd}{\pd x_2} p^*(x_2) \log p(x_2)\\
+			\vdots \\
+			-\frac{\pd}{\pd x_k} p^*(x_k) \log p(x_k)\\
+			\vdots \\
+			-\frac{\pd}{\pd x_N} p^*(x_N) \log p(x_N)
+		\end{pmatrix}
+		\\ &=
+		\begin{pmatrix}
+			0 \\
+			0 \\
+			\vdots \\
+			-\frac{1}{p(x_k)} \\
+			\vdots \\
+			0
+		\end{pmatrix}
+		\begin{matrix}
+			\phantom{0} \\
+			\phantom{0} \\
+			\phantom{\vdots} \\
+			\leftarrow k \phantom{\frac{1}{1}} \\
+			\phantom{\vdots} \\
+			\phantom{0}
+		\end{matrix}
+	\end{align}
+
+	So our cross entropy gradient for a one hot vector $\bs{p}^*$ with nonzero
+	position $k$ is $0$ everywhere except at position $k$.
+	\newline
+
+	Now we compute our next required derivative: softmax.
+	The softmax function is given by
+
+	\begin{align}
+		\text{softmax}(\boldsymbol{x})
+		&=
+		\frac{1}{
+			\sum_{k=1}^{K} e^{x_k}
+		}
+		\begin{pmatrix}
+			e^{x_0} \\
+			e^{x_1} \\
+			\vdots \\
+			e^{x_K}
+		\end{pmatrix}
+	\end{align}
+
+	Unlike cross entropy which transforms a vector to a scalar, softmax
+	maps a vector to another vector. As such, we need to derive a Jacobian in
+	denominator notation rather than a gradient. This Jacobian will be given by
+
+	\begin{align}
+		J = \begin{pmatrix}
+
+
+	\end{align}
+\end{proof}
+
+% ---------------------------------------------------------
+\HomeworkHeader{2 (Linear Algebra)}{2}% homework number, problem number
+% ---------------------------------------------------------
+\begin{enumerate}[(a)]\itemsep0pt
+  \item
+    What is the arithmetic intensity for matrix matrix multiplication with
+		sizes $M, N, K$.
+
+\end{enumerate}
+
+\end{document}
