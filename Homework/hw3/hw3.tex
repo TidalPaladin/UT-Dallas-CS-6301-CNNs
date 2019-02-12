@@ -11,11 +11,19 @@
 \usepackage{jeffe, handout,graphicx}
 \usepackage{forest}
 \usepackage{mathtools}
-\usepackage{tikz}
+\usepackage{tikz, ifthen, etoolbox}
 \usepackage{float}
 \usetikzlibrary{positioning}
 \newcommand{\pd}{\partial}
 \newcommand{\bs}{\boldsymbol}
+\newcommand{\ifstringequal}[4]{%
+  \ifnum\pdfstrcmp{#1}{#2}=0
+  #3%
+  \else
+  #4%
+  \fi
+}
+
 
 % =========================================================
 %   Define common stuff for solution headers
@@ -30,11 +38,7 @@
 \begin{document}
 \HomeworkHeader{3 (Calculus)}{1}% homework number, problem number
 % ---------------------------------------------------------
-Honor statement:
-\newline
-
 \noindent
-Read:
 \begin{solution}
 	Complete
 \end{solution}
@@ -42,7 +46,6 @@ Read:
 % =========================================================
 \HomeworkHeader{3 (Calculus)}{2}% homework number, problem number
 % ---------------------------------------------------------
-Read:
 \begin{solution}
 	Complete
 \end{solution}
@@ -50,7 +53,6 @@ Read:
 % =========================================================
 \HomeworkHeader{3 (Calculus)}{3}% homework number, problem number
 % ---------------------------------------------------------
-Read:
 \begin{solution}
 	Complete
 \end{solution}
@@ -103,9 +105,9 @@ $\pd e/ \pd\boldsymbol{x}$
 
 	\begin{align}
 		\text{crossEntropy}(\boldsymbol{p}^*, \boldsymbol{p})
-		&=
+		\equiv
 		c(\boldsymbol{p}^*, \boldsymbol{p})
-		&=
+		=
 		-\sum_{x_i\in\boldsymbol{x}} p^*(x_i) \log p(x_i)
 	\end{align}
 
@@ -115,8 +117,6 @@ $\pd e/ \pd\boldsymbol{x}$
 	differentiation. Applying the log derivative identity gives
 
 	\begin{align}
-		\nabla_{\bs{x}}c(\bs{p}^*, \bs{p})
- 		&=\\
 		\nabla_{\bs{x}}\bigg(-\sum_{x_i\in\bs{x}} p^*(x_i) \log p(x_i)\bigg)
  		&=
 		\begin{pmatrix}
@@ -176,7 +176,7 @@ $\pd e/ \pd\boldsymbol{x}$
 		\end{pmatrix}
 	\end{align}
 
-	Calculating this derivative will yield a Jacobian
+	Calculating this derivative will yield a Jacobian matrix
 
 	\begin{align}
 		\frac{\pd s}{\pd \bs{x}}
@@ -233,8 +233,8 @@ $\pd e/ \pd\boldsymbol{x}$
 		\\
 	\end{align}
 
-	So we get this Jacobian matrix where the entries come from two possible
-	cases that can be expressed in terms of the original function. To express
+	In this Jacobian matrix the entries come from two possible
+	cases that can both be expressed in terms of the original function. To express
 	this more cleanly let us denote the softmax at a given $x_i \in \bs{x}$
 	with the same $p(x_i)$ notation used for handling cross entropy.
 	Then the entry of the $i$th row and $j$th column in the Jacobian matrix for
@@ -322,7 +322,7 @@ $\pd e/ \pd\boldsymbol{x}$
 \end{proof}
 
 % ---------------------------------------------------------
-\HomeworkHeader{2 (Linear Algebra)}{5}% homework number, problem number
+\HomeworkHeader{3 (Calculus)}{5}% homework number, problem number
 % ---------------------------------------------------------
 
 \begin{solution}
@@ -337,7 +337,7 @@ $\pd e/ \pd\boldsymbol{x}$
 
 \begin{proof}
 	First we decompose the residual block representing the flow of information
-	in backpropagation: resiudal input, pointwise nonlinearity, bias vector,
+	in backpropagation: residual input, pointwise nonlinearity, bias vector,
 	and dense layer.
 
 	\tikzset{%
@@ -679,7 +679,7 @@ $\pd e/ \pd\boldsymbol{x}$
 	\end{align}
 
 	Finally, we must remember that as a residual layer the backwards pass graph
-	has a two element merge into $\pd e / \pd \bs{x}$. One we finished
+	has a merge of two gradients into $\pd e / \pd \bs{x}$. One we finished
 	computing through the dense layer, and the other comes from the residual
 	block we computed first. This gives the final result
 
@@ -892,7 +892,7 @@ $\pd e/ \pd\boldsymbol{x}$
 			\frac{\pd e}{\pd \bs{x}_3}\cdot\frac{\pd\bs{x}_3}{\pd\bs{x}_2}
 		\bigg)
 		\\
-		&= \bs{H} - \alpha \Bigg(
+		&= \bs{v} - \alpha \Bigg(
 			\bigg(
 				\bs{I}_n\{0, 1\}\bs{I}_n\dfrac{\pd e}{\pd\bs{y}}
 			\bigg)
@@ -913,5 +913,243 @@ $\pd e/ \pd\boldsymbol{x}$
 	$\bs{I}\{0, 1\}$.
 
 \end{solution}
+
+% ---------------------------------------------------------
+\HomeworkHeader{3 (Calculus)}{7}% homework number, problem number
+% ---------------------------------------------------------
+
+\begin{solution}
+	This problem expands on the summation proved in the last homework. Slide 76
+	of the linear algebra lecture provides a nice picture of what is going on.
+	The yellow dense Toeplitz matrix for $\bs{X}$ shows concretely the role of
+	edge effects in producing varying numbers of duplicated filter weights.
+	Such edge effects are the result of elements in an input feature map being
+	passed over by a varying number of filter kernel weights based on their
+	location. For example, column edge elements will receive only one filter
+	weight across a given row, while inner elements will be exposed to the
+	filter kernel multiple times.
+
+	In order to avoid wasting memory on duplicated inputs we do not store the
+	entire Toeplitz matrix. From the picture on slide 76 it is clear that
+	no duplications occur along a row of the Toeplitz matrix. It is also clear
+	from the indexing for $\bs{X}_{f_rf_c}$ given in the problem that a row of
+	the Toeplitz matrix contains inputs of one feature map that are all passed
+	over by the same filter coefficient. As such, skipping $F_r * F_c$ rows
+	will take us between input feature maps.
+	\newline
+
+	With that background, we can start by drawing a rough approximation of the
+	summation of matrix matrix multiplications as follows.
+
+
+
+	\tikzset{%
+		every block/.style={
+			rectangle,
+			draw,
+			minimum width=3cm,
+			minimum height=1cm,
+			node distance=2cm
+		},
+		every input/.style={
+			circle,
+			draw,
+			minimum size=1.25cm,
+			node distance=2cm
+		},
+		backward/.style={
+			color=red
+		},
+		phantom node/.style={
+			rectangle,
+			draw=none,
+			minimum width=1cm,
+			minimum height=1cm,
+			node distance=2cm
+		},
+		missing/.style={
+			draw=none,
+			scale=4,
+			text height=0.333cm,
+			execute at begin node=\color{black}$\vdots$
+		},
+	}
+
+	\begin{figure}[H]
+	\centering
+	\begin{tikzpicture}
+		\foreach \l [count=\i] in {11,12,21,missing,f_rf_c} {
+			\node [every input/.try, \l/.try] (x-\l) at (0,{-2*\i}) {
+				\ifstringequal{\l}{missing}{}{$\bs{X}_{\l}$}
+			};
+			\node [every block/.try, \l/.try] (h-\l) at (4,{-2*\i}) {
+				\ifstringequal{\l}{missing}{}
+				{Mul$(\bs{H}_{\l}, \bs{X}_{\l})$}
+			};
+			\ifstringequal{\l}{missing}
+				{}
+				{
+					\draw [->, line width=0.3mm] (x-\l) -- (h-\l)
+			};
+		};
+
+		\node [every input/.try] (y) at (8,-6) {
+			$\bs{Y}^{2D}$
+		};
+		\foreach \l [count=\i] in {11,12,21,f_rf_c} {
+			\draw [->, line width=0.3mm, color=black] (h-\l.east) --
+			(y);
+		};
+
+		\node [every input/.try] (x) at (-4,-6) {
+			$\bs{X}^{2D}$
+		};
+		\foreach \l [count=\i] in {11,12,21,f_rf_c} {
+			\draw [->, line width=0.3mm, color=black] (x) --
+			(x-\l);
+		};
+	\end{tikzpicture}
+	\caption{Outline of CNN style 2D convolution as sum of matrix
+		multiplications}
+	\end{figure}
+
+	\begin{figure}[H]
+	\centering
+	\begin{tikzpicture}
+		\node [every input/.try] (x) at (-4,-4) {
+			$\bs{X}^{2D}$
+		};
+		\node [every input/.try] (y) at (8,-4) {
+			$\bs{Y}^{2D}$
+		};
+		\foreach \l [count=\i] in {11,missing,f_rf_c} {
+			\node [every block/.try, \l/.try] (x-\l) at (0,{-2*\i}) {
+				\ifstringequal{\l}{missing}{}{
+					$\begin{pmatrix}
+						(x_{\l})_{1}^{m_rm_c} & \cdots & (x_{\l})_{1}^{M_rM_c}\\
+						\vdots & \ddots & \vdots \\
+						(x_{\l})_{N_i}^{m_rm_c} & \cdots & (x_{\l})_{N_i}^{M_rM_c}\\
+					\end{pmatrix}$
+				}
+			};
+			\node [every block/.try, \l/.try] (h-\l) at (5,{-2*\i}) {
+				\ifstringequal{\l}{missing}{}
+				{Mul$(\bs{H}_{\l}, \bs{X}_{\l})$}
+			};
+			\ifstringequal{\l}{missing}
+				{}
+				{
+					\draw [->, line width=0.3mm] (x-\l) -- (h-\l.west);
+					\draw [->, line width=0.3mm, color=black] (h-\l.east) --
+					(y);
+					\draw [->, line width=0.3mm, color=black] (x) --
+					(x-\l);
+			};
+		};
+
+	\end{tikzpicture}
+	\caption{Attempt at showing matrices that contribute to the summation}
+	\end{figure}
+
+	We can then draw a \textbf{rough} outline of the backward pass
+
+	\begin{figure}[H]
+	\centering
+	\begin{tikzpicture}
+		\foreach \l [count=\i] in {11,12,21,missing,f_rf_c} {
+			\node [every input, backward, \l/.try] (x-\l) at (0,{-2*\i}) {
+				\ifstringequal{\l}{missing}{}{
+					$\dfrac{\pd e}{\pd\bs{X}_{\l}}$
+				}
+			};
+			\node [every block, backward, \l/.try] (h-\l) at (4,{-2*\i}) {
+				\ifstringequal{\l}{missing}{}
+				{
+					$\bs{H}_{\l}^T$
+				}
+			};
+			\ifstringequal{\l}{missing}
+				{}
+				{
+					\draw [<-, backward, line width=0.3mm] (x-\l) -- (h-\l)
+			};
+		};
+
+		\node [every input, backward] (y) at (8,-6) {
+			$\dfrac{\pd e}{\pd\bs{Y}}$
+		};
+		\foreach \l [count=\i] in {11,12,21,f_rf_c} {
+			\draw [<-, backward, line width=0.3mm] (h-\l.east) --
+			(y);
+		};
+
+		\node [every input, backward] (x) at (-4,-6) {
+			$\dfrac{\pd e}{\pd\bs{X}}$
+		};
+		\foreach \l [count=\i] in {11,12,21,f_rf_c} {
+			\draw [<-, backward, line width=0.3mm] (x) --
+			(x-\l);
+		};
+	\end{tikzpicture}
+	\caption{Backward pass outline of CNN style 2D convolution as sum of matrix
+		multiplications}
+	\end{figure}
+
+	First, note that the backward pass strongly resembles a
+	forward pass, but acting on differently shaped input with transposed
+	filters. As such, we should be able to express the backward pass as a CNN
+	style 2D convolution or equivalent sum of lowered matrix matrix
+	multiplications. However, to express the backpropagation step as a lowered
+	CNN style 2D convolution we would need to modify $\pd e / \pd\bs{Y}$ in the
+	same way we did $\bs{X}$ in the original lowering.
+	\newline
+
+	This would let us write something like
+
+	\begin{align}
+		\frac{\pd e}{\pd\bs{X}^{2D}}
+		&=
+		\sum_{f_rf_c}\bigg(\bs{H}_{f_rf_c}^{2D}\bigg)^T
+		\frac{\pd e}{\pd \bs{Y}_{f_rf_c}^{2D}}
+	\end{align}
+
+	with associated CNN style 2D convolution
+
+	\begin{align}
+		\frac{\pd e}{\pd\bs{X}}
+		&=
+		\bs{H}^T
+		\frac{\pd e}{\pd \bs{Y}}
+	\end{align}
+
+	My best guess on how to create $\bs{Y}^{2D}$ is that we would
+	follow the process by which the Toeplitz matrix created $\bs{X}^{2D}$.
+	We could express $(\bs{H}^{2D})^T$ as $N_i \times (N_o F_r F_c)$ and
+	$\bs{Y}^{2D}$ as $N_o F_r F_c \times M_r M_c$. If we then pad $\bs{Y}^{2D}$
+	appropriately such that we convert $M_r, M_c$ to $L_r L_c$ we would have a
+	lowered matrix matrix expression that would produce the correct output. The
+	padding would be probably be more easily visualized if it was applied using
+	normal convolution padding/stride rules before lowering $\bs{Y}$.
+
+
+
+\end{solution}
+
+% ---------------------------------------------------------
+\HomeworkHeader{3 (Calculus)}{8}% homework number, problem number
+% ---------------------------------------------------------
+\begin{solution}
+	Complete
+
+	I tried doubling various parameters and for the most part the impact on
+	training  time and accuracy was negligible. However, doubling the number of
+	output feature maps or adding additional layers did create a substantial
+	impact. It was a nice reflection that network design is not arbitrary, and
+	that guessing network architecture would involve a lot of trial and error.
+\end{solution}
+% ---------------------------------------------------------
+\HomeworkHeader{3 (Calculus)}{9}% homework number, problem number
+% ---------------------------------------------------------
+\begin{solution}Complete\end{solution}
 
 \end{document}
