@@ -1065,7 +1065,7 @@ $\pd e/ \pd\boldsymbol{x}$
 			\node [every block, backward, \l/.try] (h-\l) at (4,{-2*\i}) {
 				\ifstringequal{\l}{missing}{}
 				{
-					$\bs{H}_{\l}^T$
+					$\hat{\bs{H}}_{\l}^T$
 				}
 			};
 			\ifstringequal{\l}{missing}
@@ -1097,7 +1097,8 @@ $\pd e/ \pd\boldsymbol{x}$
 
 	First, note that the backward pass strongly resembles a
 	forward pass, but acting on differently shaped input with transposed
-	filters. As such, we should be able to express the backward pass as a CNN
+	block diagonal filters. As such, we should be able to express
+	the backward pass as a CNN
 	style 2D convolution or equivalent sum of lowered matrix matrix
 	multiplications. However, to express the backpropagation step as a lowered
 	CNN style 2D convolution we would need to modify $\pd e / \pd\bs{Y}$ in the
