@@ -33,10 +33,19 @@
 \Authors{1}
 \AuthorOne{Scott C. Waggener}{scw180000}
 %\Section{}
-
 % =========================================================
 \begin{document}
 \HomeworkHeader{4 (Probability)}{1}% homework number, problem number
+% ---------------------------------------------------------
+Complete
+
+% =========================================================
+\HomeworkHeader{4 (Probability)}{2}% homework number, problem number
+% ---------------------------------------------------------
+Complete
+
+% =========================================================
+\HomeworkHeader{4 (Probability)}{3}% homework number, problem number
 % ---------------------------------------------------------
 \noindent
 \begin{enumerate}[(a)]\itemsep0pt
@@ -62,6 +71,22 @@
 \end{enumerate}
 
 % =========================================================
+\HomeworkHeader{4 (Probability)}{4}
+% ---------------------------------------------------------
+\begin{solution}
+	The plot was generated using $100$ trials for each of the possible number
+	of known questions. Sampling was done using $\texttt{np.random.binomial}$
+	with $n=1,\ p=0.25,\ \text{size}=(100 - \text{known})$
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\linewidth]{figures/q4.png}
+		\caption{Implicit curve $\mu, \sigma$ versus number of known questions.}
+	\end{figure}
+
+\end{solution}
+
+
+% =========================================================
 \HomeworkHeader{4 (Probability)}{5}
 % ---------------------------------------------------------
 Assume ImageNet has 1.28 million images of size 3 x 256 x 256 with 1280 images
@@ -69,21 +94,22 @@ each in 1000 different classes. How many bits of information are in the ImageNet
 labels?
 
 \begin{solution}
-	$28$ bits
+	$10$ bits
 \end{solution}
 
 \begin{proof}
-	Let $I_c$ denote the number
+	Since entropy can informally be defined as the information in the
+	realization of a random variable, we can compute the entropy for the given
+	problem. We have $1280$ images in each of the $1000$ classes, meaning
 	\begin{align}
-		I_c &= 3 * 256  * 256 * 1280 \\
-		&= 251658240
-	\end{align}
-
-	\begin{align}
-		B &= \bigg\lceil\lg\left(I_c\right)\bigg\rceil
-		=\bigg\lceil\lg\left(251658240\right)\bigg\rceil
+		H(x(s)) &= -\Sum_{i=1}^{1000} \frac{1}{1000}\log_2\left(
+			\frac{1}{1000}\right)
 		\\
-		B &= 28
+		&= -\frac{1000}{1000} \log_2\left(\frac{1}{1000}\right)
+		\\
+		&= \log_2 1000
+		\\
+		&\approx 9.97
 	\end{align}
 \end{proof}
 

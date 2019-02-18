@@ -26,15 +26,12 @@ if __name__ =='__main__':
         means.append(mean)
         stdevs.append(std)
 
-    result = pd.DataFrame({'known':x, 'mean':means, 'stdev':stdevs})
-    print(result)
-
     ax = plt.subplot()
-    result.plot.scatter('known', 'mean', ax=ax)
-    result.plot.scatter('known', 'stdev', ax=ax)
-    plt.show()
-
-
-
-
-
+    plt.suptitle('Implicit curve versus known questions')
+    result = pd.DataFrame({'Known Questions':x, r'$\mu$':means, r'$\sigma$':stdevs})
+    result.set_index('Known Questions', inplace=True)
+    plt.ylabel('Implicit Curve')
+    result.plot(ax=ax, style='.')
+    #result.plot(y=r'$\mu$', ax=ax, style='.')
+    #result.plot(y=r'$\sigma$', ax=ax, style='.')
+    plt.savefig('figures/q4.png')
