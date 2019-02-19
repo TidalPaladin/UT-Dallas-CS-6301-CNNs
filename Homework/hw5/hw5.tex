@@ -199,7 +199,8 @@ Read: Algorithms
 	result of $6n+2$ comparisons represents a significant savings over the $8n$
 	comparisons in the naive case. Also note that for a larger kernel size the
 	algorithm would resemble mergesort with logarithmic comparison asymptotes
-	across filter rows and columns.
+	across filter rows and columns. We would potentially lose the overlap
+	between strides for other kernel sizes and strides.
 
 
 \end{proof}
@@ -213,8 +214,7 @@ Read: Algorithms
 
 
 \begin{proof}
-	We can infer from the result of the previous problem that we will have
-
+	We can infer $M_r$ from the result of the previous problem.
 	The pooling operation can be visualized as
 
 	\begin{figure}[H]

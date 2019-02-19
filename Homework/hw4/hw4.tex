@@ -55,21 +55,99 @@ Complete
 	\end{solution}
 
 	\begin{proof}
-		First a qualitative answer: In the standard version of the game
-		answers are received immediately after each question, meaning that the
-		answer to question $q-1$ will inform what should be asked for question
-		$q$. Expressed mathematically, the conditional probability of possible
-		objects at iteration $i$ will be of the form
+		Think of this in terms of maximizing information gain with each
+		question. If we do not receive an answer immedaitely after each
+		question our best strategy would be to choose the top $20$ questions
+		that provide the most mutual information about the object without
+		considering how information gain at a given question is conditioned on
+		the answer of previous questions.
+		\newline
+
+		If we do receive an answer after each question, we can choose
+		information maximizing questions based on known realizations of the
+		random variables given as answers.
+	\end{proof}
+
+\item
+	\begin{solution}
+		The modified game
+	\end{solution}
+	\begin{proof}
+		The input tensor passes through multiple layers before being converted
+		to a feature vector. The dense layer then uses this feature vector to
+		eventually provide a class pmf vector. In this construction the feature
+		vector can be thought of as answers to the $20$ questions which are
+		used to compute each class probability. There is no dependency on which
+		features a network extracts at a given layer conditioned on the
+		features extracted from a previous layer.
+	\end{proof}
+
+\item
+	\begin{solution}
+		Essentially, provide redundency assuming the probability of an
+		incorrect answer is not $0.5$.
+	\end{solution}
+	\begin{proof}
+		Of course, if we are given an incorrect answer with probability $0.5$
+		we have an entropy maximizing uniform distribution across both possible
+		answers. We will receive no information from each answer and will be
+		unable to play the game.
+		\newline
+
+		Otherwise, we can attempt to provide some redundency in our questions
+		to help minimize the uncertainty about answers. We can tailor the
+		amount of overlap based on the probability of receiving a correct or
+		incorrect answer, with greater overlap required as the probabilities
+		approach $0.5 / 0.5$. Furthermore, we can trivially handle the case
+		where we are more likely to receive an incorrect answer by negating the
+		given answer.
+		\newline
+
+		The chain rule can be written as
 
 		\begin{align}
-			P(O=o_n) = P\bigg(o_n \Big\vert a_{i-1}, a_{i-2}, \dots a_{1}\bigg)
+			p\Big( x_{n-1} \vert \hat x_{n-2}, \hat x_{n-3}, \dots,
+				\hat x_{0}\Big)
+			&= \frac{
+			p\Big( x_{n-1}, \hat x_{n-2}, \hat x_{n-3}, \dots,
+				\hat x_{0}\Big)
+			}{
+			p\Big(\hat x_{n-2}, \hat x_{n-3}, \dots,
+				\hat x_{0}\Big)
+			}
 		\end{align}
 
-		where $a_i$ is the answer to the $i$th question. If person B wants to
-		maximize $P(O=o_n)$ for some object, they need
-	\end{proof}
-\end{enumerate}
+		Tweaking the overlap of questions would exert control over the joint
+		probability seen in the denominator (and partially in numerator).
 
+	\end{proof}
+
+\item
+	\begin{solution}
+		Strategy change is similar to the one used for the original game, but
+		providing redundency blindly during the questioning process.
+	\end{solution}
+	\begin{proof}
+		Now we are playing the modified game, but with some probability the
+		given answer will be wrong. At the end of the round we will have a
+		probability for each class conditioned on $20$ answers which are only
+		correct with some probability. Again, we wouldn't play with a $0.5 /
+		0.5$ probability split since each answer provides no information.
+		Otherwise we need to provide some redundency in our questions, but we
+		cannot determine the best redundency providing questions conditioned on
+		answers to other questions.
+		\newline
+
+		Since our answers are only correct with some probability we cannot
+		exclude any classes from our output pmf. Additionally, a network would
+		provide this redundency by extracting multiple features that may point
+		to a given class. Since each extracted feature may be incorrect, having
+		multiple features that indicate membership to a given class provides
+		redundency.
+
+	\end{proof}
+
+\end{enumerate}
 % =========================================================
 \HomeworkHeader{4 (Probability)}{4}
 % ---------------------------------------------------------
