@@ -56,7 +56,7 @@ Complete
 
 	\begin{proof}
 		Think of this in terms of maximizing information gain with each
-		question. If we do not receive an answer immedaitely after each
+		question. If we do not receive an answer immediately after each
 		question our best strategy would be to choose the top $20$ questions
 		that provide the most mutual information about the object without
 		considering how information gain at a given question is conditioned on
@@ -64,7 +64,7 @@ Complete
 		\newline
 
 		If we do receive an answer after each question, we can choose
-		information maximizing questions based on known realizations of the
+		information maximizing questions conditioned on known realizations of the
 		random variables given as answers.
 	\end{proof}
 
@@ -84,7 +84,7 @@ Complete
 
 \item
 	\begin{solution}
-		Essentially, provide redundency assuming the probability of an
+		Essentially, provide redundancy assuming the probability of an
 		incorrect answer is not $0.5$.
 	\end{solution}
 	\begin{proof}
@@ -94,7 +94,7 @@ Complete
 		unable to play the game.
 		\newline
 
-		Otherwise, we can attempt to provide some redundency in our questions
+		Otherwise, we can attempt to provide some redundancy in our questions
 		to help minimize the uncertainty about answers. We can tailor the
 		amount of overlap based on the probability of receiving a correct or
 		incorrect answer, with greater overlap required as the probabilities
@@ -125,7 +125,7 @@ Complete
 \item
 	\begin{solution}
 		Strategy change is similar to the one used for the original game, but
-		providing redundency blindly during the questioning process.
+		providing redundancy blindly during the questioning process.
 	\end{solution}
 	\begin{proof}
 		Now we are playing the modified game, but with some probability the
@@ -133,17 +133,17 @@ Complete
 		probability for each class conditioned on $20$ answers which are only
 		correct with some probability. Again, we wouldn't play with a $0.5 /
 		0.5$ probability split since each answer provides no information.
-		Otherwise we need to provide some redundency in our questions, but we
-		cannot determine the best redundency providing questions conditioned on
+		Otherwise we need to provide some redundancy in our questions, but we
+		cannot determine the best redundancy providing questions conditioned on
 		answers to other questions.
 		\newline
 
 		Since our answers are only correct with some probability we cannot
 		exclude any classes from our output pmf. Additionally, a network would
-		provide this redundency by extracting multiple features that may point
+		provide this redundancy by extracting multiple features that may point
 		to a given class. Since each extracted feature may be incorrect, having
 		multiple features that indicate membership to a given class provides
-		redundency.
+		redundancy.
 
 	\end{proof}
 

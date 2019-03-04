@@ -30,7 +30,7 @@ from   tensorflow import keras
 # additional libraries
 import numpy             as np
 import matplotlib.pyplot as plt
-%matplotlib inline
+#%matplotlib inline
 
 
 ################################################################################
@@ -66,20 +66,20 @@ TRAINING_CHECKPOINT_FILE   = './logs/model_{}.ckpt' # currently not used
 ################################################################################
 
 def pre_processing_train(image, label):
-    
+
     # note: this function operates on 8 bit data then normalizes to a float
-    
+
     # normalization
     # this constrains values to [0, 1]
     # the mean is not subtracted as there are many 0 values to start in the greyscale image
     image = tf.cast(image, tf.float32)/255.0
-    
+
     return image, label
 
 def pre_processing_test(image, label):
-    
+
     # note: this function operates on 8 bit data then normalizes to a float
-    
+
     # normalization
     # this constrains values to [0, 1]
     # the mean is not subtracted as there are many 0 values to start in the greyscale image
@@ -146,16 +146,16 @@ data, labels = iterator.get_next()
 
 # nn model
 def model_nn(data, train_state, size_layer_0, size_layer_1, num_classes):
-    
+
     # encoder
     fm       = tf.layers.flatten(data)                                                 # fm.shape = TRAINING_BATCH_SIZE x (rows*cols)
     fm       = tf.layers.dense(fm, size_layer_0, activation=tf.nn.relu, use_bias=True) # fm.shape = TRAINING_BATCH_SIZE x size_layer_0
     features = tf.layers.dense(fm, size_layer_1, activation=tf.nn.relu, use_bias=True) # fm.shape = TRAINING_BATCH_SIZE x size_layer_1
-    
+
     # decoder
     # predictions.shape = TRAINING_BATCH_SIZE x num_classes
     predictions = tf.layers.dense(features, num_classes, activation=None, use_bias=True)
-    
+
     # return
     return predictions
 
@@ -204,13 +204,13 @@ with tf.control_dependencies(update_ops):
 
 # create a session
 session = tf.Session()
-    
+
 # initialize global variables
 session.run(tf.global_variables_initializer())
 
 # cycle through the epochs
 for epoch_index in range(TRAINING_NUM_EPOCHS):
-    
+
     # train
     # initialize the iterator to the training dataset
     # cycle through the training batches
@@ -260,18 +260,18 @@ session.run(iterator_init_test)
 
 # cycle through a few batches
 for batch_index in range(1):
-    
+
     # generate data and labels
     data_batch, labels_batch = session.run([data, labels])
-    
+
     # convert the final saved predictions to labels
     row_start          = batch_index*TRAINING_BATCH_SIZE
     row_end            = (batch_index + 1)*TRAINING_BATCH_SIZE
     predictions_labels = np.argmax(predictions_test[row_start:row_end, :], axis=1)
-    
+
     # cycle through the images in the batch
     for image_index in range(TRAINING_BATCH_SIZE):
-        
+
         # display the predicted label, actual label and image
         print('Predicted label: {0:1d} and actual label: {1:1d}'.format(predictions_labels[image_index], labels_batch[image_index]))
         plt.imshow(data_batch[image_index, :, :], cmap='gray')

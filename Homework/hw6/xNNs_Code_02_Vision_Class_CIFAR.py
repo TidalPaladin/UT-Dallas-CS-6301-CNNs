@@ -1,3 +1,4 @@
+#!python3
 ################################################################################
 #
 # xNNs_Code_02_Vision_Class_CIFAR.py
@@ -32,11 +33,11 @@ from   tensorflow.contrib import autograph
 # additional libraries
 import numpy             as np
 import matplotlib.pyplot as plt
-#%matplotlib inline
 import datetime
+#%matplotlib inline
 
 import os
-os.environ['CUDA_VISIBLE_DEVICES']='0'
+os.environ['CUDA_VISIBLE_DEVICES']='1'
 
 ################################################################################
 #
@@ -164,108 +165,6 @@ data, labels = iterator.get_next()
 
 ################################################################################
 #
-# MODEL - SEQUENTIAL
-#
-################################################################################
-
-# sequential model
-def model_sequential(data, train_state, num_classes):
-
-    # data
-    # TRAINING_BATCH_SIZE x rows x cols x channels
-
-    # encoder - level 0
-    fm       = tf.layers.conv2d(data, 32, (3, 3), strides=(1, 1), padding='same', data_format='channels_last', dilation_rate=(1, 1), activation=tf.nn.relu, use_bias=True)
-    fm       = tf.layers.conv2d(fm,   32, (3, 3), strides=(1, 1), padding='same', data_format='channels_last', dilation_rate=(1, 1), activation=tf.nn.relu, use_bias=True)
-    fm       = tf.layers.conv2d(fm,   32, (3, 3), strides=(1, 1), padding='same', data_format='channels_last', dilation_rate=(1, 1), activation=tf.nn.relu, use_bias=True)
-
-    # encoder - level 1 down sampling
-    fm       = tf.layers.max_pooling2d(fm, (3, 3), (2, 2), padding='same', data_format='channels_last')
-
-    # encoder - level 1
-    fm       = tf.layers.conv2d(fm,   64, (3, 3), strides=(1, 1), padding='same', data_format='channels_last', dilation_rate=(1, 1), activation=tf.nn.relu, use_bias=True)
-    fm       = tf.layers.conv2d(fm,   64, (3, 3), strides=(1, 1), padding='same', data_format='channels_last', dilation_rate=(1, 1), activation=tf.nn.relu, use_bias=True)
-    fm       = tf.layers.conv2d(fm,   64, (3, 3), strides=(1, 1), padding='same', data_format='channels_last', dilation_rate=(1, 1), activation=tf.nn.relu, use_bias=True)
-
-    # encoder - level 2 down sampling
-    fm       = tf.layers.max_pooling2d(fm, (3, 3), (2, 2), padding='same', data_format='channels_last')
-
-    # encoder - level 2
-    fm       = tf.layers.conv2d(fm,   128, (3, 3), strides=(1, 1), padding='same', data_format='channels_last', dilation_rate=(1, 1), activation=tf.nn.relu, use_bias=True)
-    fm       = tf.layers.conv2d(fm,   128, (3, 3), strides=(1, 1), padding='same', data_format='channels_last', dilation_rate=(1, 1), activation=tf.nn.relu, use_bias=True)
-    features = tf.layers.conv2d(fm,   128, (3, 3), strides=(1, 1), padding='same', data_format='channels_last', dilation_rate=(1, 1), activation=tf.nn.relu, use_bias=True)
-
-    # decoder
-    # predictions.shape = TRAINING_BATCH_SIZE x num_classes
-    features    = tf.reduce_mean(features, axis=[1, 2])
-    predictions = tf.layers.dense(features, num_classes, activation=None, use_bias=True)
-
-    # return
-    return predictions
-
-
-################################################################################
-#
-# MODEL - SEQUENTIAL BATCH NORM
-#
-################################################################################
-
-# sequential batch norm model (85.25 %)
-def model_sequential_bn(data, train_state, num_classes):
-
-    # data
-    # TRAINING_BATCH_SIZE x rows x cols x channels
-
-    # encoder - level 0
-    fm       = tf.layers.conv2d(data, 32, (3, 3), strides=(1, 1), padding='same', data_format='channels_last', dilation_rate=(1, 1), activation=None, use_bias=False)
-    fm       = tf.layers.batch_normalization(fm, training=train_state)
-    fm       = tf.nn.relu(fm)
-    fm       = tf.layers.conv2d(fm,   32, (3, 3), strides=(1, 1), padding='same', data_format='channels_last', dilation_rate=(1, 1), activation=None, use_bias=False)
-    fm       = tf.layers.batch_normalization(fm, training=train_state)
-    fm       = tf.nn.relu(fm)
-    fm       = tf.layers.conv2d(fm,   32, (3, 3), strides=(1, 1), padding='same', data_format='channels_last', dilation_rate=(1, 1), activation=None, use_bias=False)
-    fm       = tf.layers.batch_normalization(fm, training=train_state)
-    fm       = tf.nn.relu(fm)
-
-    # encoder - level 1 down sampling
-    fm       = tf.layers.max_pooling2d(fm, (3, 3), (2, 2), padding='same', data_format='channels_last')
-
-    # encoder - level 1
-    fm       = tf.layers.conv2d(fm,   64, (3, 3), strides=(1, 1), padding='same', data_format='channels_last', dilation_rate=(1, 1), activation=None, use_bias=False)
-    fm       = tf.layers.batch_normalization(fm, training=train_state)
-    fm       = tf.nn.relu(fm)
-    fm       = tf.layers.conv2d(fm,   64, (3, 3), strides=(1, 1), padding='same', data_format='channels_last', dilation_rate=(1, 1), activation=None, use_bias=False)
-    fm       = tf.layers.batch_normalization(fm, training=train_state)
-    fm       = tf.nn.relu(fm)
-    fm       = tf.layers.conv2d(fm,   64, (3, 3), strides=(1, 1), padding='same', data_format='channels_last', dilation_rate=(1, 1), activation=None, use_bias=False)
-    fm       = tf.layers.batch_normalization(fm, training=train_state)
-    fm       = tf.nn.relu(fm)
-
-    # encoder - level 2 down sampling
-    fm       = tf.layers.max_pooling2d(fm, (3, 3), (2, 2), padding='same', data_format='channels_last')
-
-    # encoder - level 2
-    fm       = tf.layers.conv2d(fm,   128, (3, 3), strides=(1, 1), padding='same', data_format='channels_last', dilation_rate=(1, 1), activation=None, use_bias=False)
-    fm       = tf.layers.batch_normalization(fm, training=train_state)
-    fm       = tf.nn.relu(fm)
-    fm       = tf.layers.conv2d(fm,   128, (3, 3), strides=(1, 1), padding='same', data_format='channels_last', dilation_rate=(1, 1), activation=None, use_bias=False)
-    fm       = tf.layers.batch_normalization(fm, training=train_state)
-    fm       = tf.nn.relu(fm)
-    fm       = tf.layers.conv2d(fm,   128, (3, 3), strides=(1, 1), padding='same', data_format='channels_last', dilation_rate=(1, 1), activation=None, use_bias=False)
-    fm       = tf.layers.batch_normalization(fm, training=train_state)
-    features = tf.nn.relu(fm)
-
-    # decoder
-    # predictions.shape = TRAINING_BATCH_SIZE x num_classes
-    features    = tf.reduce_mean(features, axis=[1, 2])
-    predictions = tf.layers.dense(features, num_classes, activation=None, use_bias=True)
-
-    # return
-    return predictions
-
-
-################################################################################
-#
 # MODEL - RESNET V2
 #
 ################################################################################
@@ -278,7 +177,7 @@ def model_resnet(data, train_state, level_0_blocks, level_1_blocks, level_2_bloc
     # TRAINING_BATCH_SIZE x rows x cols x channels
 
     # encoder - tail
-    fm_id       = tf.layers.conv2d(data, 32, (3, 3), strides=(1, 1), padding='same', data_format='channels_last', dilation_rate=(1, 1), activation=None, use_bias=False)
+    fm_id       = tf.layers.conv2d(data, 16, (3, 3), strides=(1, 1), padding='same', data_format='channels_last', dilation_rate=(1, 1), activation=None, use_bias=False)
 
     # encoder - level 0 special bottleneck x1
     # input:  32 x 32 x 32
@@ -289,14 +188,14 @@ def model_resnet(data, train_state, level_0_blocks, level_1_blocks, level_2_bloc
     # output: 64 x 32 x 32
     fm_residual = tf.layers.batch_normalization(fm_id, training=train_state)
     fm_residual = tf.nn.relu(fm_residual)
-    fm_residual = tf.layers.conv2d(fm_residual, 16, (1, 1), strides=(1, 1), padding='same', data_format='channels_last', dilation_rate=(1, 1), activation=None, use_bias=False)
+    fm_residual = tf.layers.conv2d(fm_residual, 8, (1, 1), strides=(1, 1), padding='same', data_format='channels_last', dilation_rate=(1, 1), activation=None, use_bias=False)
     fm_residual = tf.layers.batch_normalization(fm_residual, training=train_state)
     fm_residual = tf.nn.relu(fm_residual)
-    fm_residual = tf.layers.conv2d(fm_residual, 16, (3, 3), strides=(1, 1), padding='same', data_format='channels_last', dilation_rate=(1, 1), activation=None, use_bias=False)
+    fm_residual = tf.layers.conv2d(fm_residual, 8, (3, 3), strides=(1, 1), padding='same', data_format='channels_last', dilation_rate=(1, 1), activation=None, use_bias=False)
     fm_residual = tf.layers.batch_normalization(fm_residual, training=train_state)
     fm_residual = tf.nn.relu(fm_residual)
-    fm_residual = tf.layers.conv2d(fm_residual, 64, (1, 1), strides=(1, 1), padding='same', data_format='channels_last', dilation_rate=(1, 1), activation=None, use_bias=False)
-    fm_id       = tf.layers.conv2d(fm_id,       64, (1, 1), strides=(1, 1), padding='same', data_format='channels_last', dilation_rate=(1, 1), activation=None, use_bias=False)
+    fm_residual = tf.layers.conv2d(fm_residual, 32, (1, 1), strides=(1, 1), padding='same', data_format='channels_last', dilation_rate=(1, 1), activation=None, use_bias=False)
+    fm_id       = tf.layers.conv2d(fm_id,       32, (1, 1), strides=(1, 1), padding='same', data_format='channels_last', dilation_rate=(1, 1), activation=None, use_bias=False)
     fm_id       = tf.add(fm_id, fm_residual)
 
     # encoder - level 0 standard bottleneck x(level_0_blocks - 1)
@@ -309,13 +208,13 @@ def model_resnet(data, train_state, level_0_blocks, level_1_blocks, level_2_bloc
     for block_repeat_0 in range(level_0_blocks - 1):
         fm_residual = tf.layers.batch_normalization(fm_id, training=train_state)
         fm_residual = tf.nn.relu(fm_residual)
-        fm_residual = tf.layers.conv2d(fm_residual, 16, (1, 1), strides=(1, 1), padding='same', data_format='channels_last', dilation_rate=(1, 1), activation=None, use_bias=False)
+        fm_residual = tf.layers.conv2d(fm_residual, 8, (1, 1), strides=(1, 1), padding='same', data_format='channels_last', dilation_rate=(1, 1), activation=None, use_bias=False)
         fm_residual = tf.layers.batch_normalization(fm_residual, training=train_state)
         fm_residual = tf.nn.relu(fm_residual)
-        fm_residual = tf.layers.conv2d(fm_residual, 16, (3, 3), strides=(1, 1), padding='same', data_format='channels_last', dilation_rate=(1, 1), activation=None, use_bias=False)
+        fm_residual = tf.layers.conv2d(fm_residual, 8, (3, 3), strides=(1, 1), padding='same', data_format='channels_last', dilation_rate=(1, 1), activation=None, use_bias=False)
         fm_residual = tf.layers.batch_normalization(fm_residual, training=train_state)
         fm_residual = tf.nn.relu(fm_residual)
-        fm_residual = tf.layers.conv2d(fm_residual, 64, (1, 1), strides=(1, 1), padding='same', data_format='channels_last', dilation_rate=(1, 1), activation=None, use_bias=False)
+        fm_residual = tf.layers.conv2d(fm_residual, 32, (1, 1), strides=(1, 1), padding='same', data_format='channels_last', dilation_rate=(1, 1), activation=None, use_bias=False)
         fm_id       = tf.add(fm_id, fm_residual)
 
     # encoder - level 1 down sampling bottleneck x1
@@ -327,14 +226,14 @@ def model_resnet(data, train_state, level_0_blocks, level_1_blocks, level_2_bloc
     # output: 128 x 16 x 16
     fm_residual = tf.layers.batch_normalization(fm_id, training=train_state)
     fm_residual = tf.nn.relu(fm_residual)
-    fm_residual = tf.layers.conv2d(fm_residual,  32, (1, 1), strides=(2, 2), padding='same', data_format='channels_last', dilation_rate=(1, 1), activation=None, use_bias=False)
+    fm_residual = tf.layers.conv2d(fm_residual,  16, (1, 1), strides=(2, 2), padding='same', data_format='channels_last', dilation_rate=(1, 1), activation=None, use_bias=False)
     fm_residual = tf.layers.batch_normalization(fm_residual, training=train_state)
     fm_residual = tf.nn.relu(fm_residual)
-    fm_residual = tf.layers.conv2d(fm_residual,  32, (3, 3), strides=(1, 1), padding='same', data_format='channels_last', dilation_rate=(1, 1), activation=None, use_bias=False)
+    fm_residual = tf.layers.conv2d(fm_residual,  16, (3, 3), strides=(1, 1), padding='same', data_format='channels_last', dilation_rate=(1, 1), activation=None, use_bias=False)
     fm_residual = tf.layers.batch_normalization(fm_residual, training=train_state)
     fm_residual = tf.nn.relu(fm_residual)
-    fm_residual = tf.layers.conv2d(fm_residual, 128, (1, 1), strides=(1, 1), padding='same', data_format='channels_last', dilation_rate=(1, 1), activation=None, use_bias=False)
-    fm_id       = tf.layers.conv2d(fm_id,       128, (1, 1), strides=(2, 2), padding='same', data_format='channels_last', dilation_rate=(1, 1), activation=None, use_bias=False)
+    fm_residual = tf.layers.conv2d(fm_residual, 64, (1, 1), strides=(1, 1), padding='same', data_format='channels_last', dilation_rate=(1, 1), activation=None, use_bias=False)
+    fm_id       = tf.layers.conv2d(fm_id,       64, (1, 1), strides=(2, 2), padding='same', data_format='channels_last', dilation_rate=(1, 1), activation=None, use_bias=False)
     fm_id       = tf.add(fm_id, fm_residual)
 
     # encoder - level 1 standard bottleneck x(level_1_blocks - 1)
@@ -347,13 +246,13 @@ def model_resnet(data, train_state, level_0_blocks, level_1_blocks, level_2_bloc
     for block_repeat_1 in range(level_1_blocks - 1):
         fm_residual = tf.layers.batch_normalization(fm_id, training=train_state)
         fm_residual = tf.nn.relu(fm_residual)
-        fm_residual = tf.layers.conv2d(fm_residual,  32, (1, 1), strides=(1, 1), padding='same', data_format='channels_last', dilation_rate=(1, 1), activation=None, use_bias=False)
+        fm_residual = tf.layers.conv2d(fm_residual,  16, (1, 1), strides=(1, 1), padding='same', data_format='channels_last', dilation_rate=(1, 1), activation=None, use_bias=False)
         fm_residual = tf.layers.batch_normalization(fm_residual, training=train_state)
         fm_residual = tf.nn.relu(fm_residual)
-        fm_residual = tf.layers.conv2d(fm_residual,  32, (3, 3), strides=(1, 1), padding='same', data_format='channels_last', dilation_rate=(1, 1), activation=None, use_bias=False)
+        fm_residual = tf.layers.conv2d(fm_residual,  16, (3, 3), strides=(1, 1), padding='same', data_format='channels_last', dilation_rate=(1, 1), activation=None, use_bias=False)
         fm_residual = tf.layers.batch_normalization(fm_residual, training=train_state)
         fm_residual = tf.nn.relu(fm_residual)
-        fm_residual = tf.layers.conv2d(fm_residual, 128, (1, 1), strides=(1, 1), padding='same', data_format='channels_last', dilation_rate=(1, 1), activation=None, use_bias=False)
+        fm_residual = tf.layers.conv2d(fm_residual, 64, (1, 1), strides=(1, 1), padding='same', data_format='channels_last', dilation_rate=(1, 1), activation=None, use_bias=False)
         fm_id       = tf.add(fm_id, fm_residual)
 
     # encoder - level 2 down sampling bottleneck x1
@@ -365,14 +264,14 @@ def model_resnet(data, train_state, level_0_blocks, level_1_blocks, level_2_bloc
     # output: 256 x   8 x 8
     fm_residual = tf.layers.batch_normalization(fm_id, training=train_state)
     fm_residual = tf.nn.relu(fm_residual)
-    fm_residual = tf.layers.conv2d(fm_residual,  64, (1, 1), strides=(2, 2), padding='same', data_format='channels_last', dilation_rate=(1, 1), activation=None, use_bias=False)
+    fm_residual = tf.layers.conv2d(fm_residual,  32, (1, 1), strides=(2, 2), padding='same', data_format='channels_last', dilation_rate=(1, 1), activation=None, use_bias=False)
     fm_residual = tf.layers.batch_normalization(fm_residual, training=train_state)
     fm_residual = tf.nn.relu(fm_residual)
-    fm_residual = tf.layers.conv2d(fm_residual,  64, (3, 3), strides=(1, 1), padding='same', data_format='channels_last', dilation_rate=(1, 1), activation=None, use_bias=False)
+    fm_residual = tf.layers.conv2d(fm_residual,  32, (3, 3), strides=(1, 1), padding='same', data_format='channels_last', dilation_rate=(1, 1), activation=None, use_bias=False)
     fm_residual = tf.layers.batch_normalization(fm_residual, training=train_state)
     fm_residual = tf.nn.relu(fm_residual)
-    fm_residual = tf.layers.conv2d(fm_residual, 256, (1, 1), strides=(1, 1), padding='same', data_format='channels_last', dilation_rate=(1, 1), activation=None, use_bias=False)
-    fm_id       = tf.layers.conv2d(fm_id,       256, (1, 1), strides=(2, 2), padding='same', data_format='channels_last', dilation_rate=(1, 1), activation=None, use_bias=False)
+    fm_residual = tf.layers.conv2d(fm_residual, 128, (1, 1), strides=(1, 1), padding='same', data_format='channels_last', dilation_rate=(1, 1), activation=None, use_bias=False)
+    fm_id       = tf.layers.conv2d(fm_id,       128, (1, 1), strides=(2, 2), padding='same', data_format='channels_last', dilation_rate=(1, 1), activation=None, use_bias=False)
     fm_id       = tf.add(fm_id, fm_residual)
 
     # encoder - level 2 standard bottleneck x(level_2_blocks - 1)
@@ -385,13 +284,13 @@ def model_resnet(data, train_state, level_0_blocks, level_1_blocks, level_2_bloc
     for block_repeat_2 in range(level_2_blocks - 1):
         fm_residual = tf.layers.batch_normalization(fm_id, training=train_state)
         fm_residual = tf.nn.relu(fm_residual)
-        fm_residual = tf.layers.conv2d(fm_residual,  64, (1, 1), strides=(1, 1), padding='same', data_format='channels_last', dilation_rate=(1, 1), activation=None, use_bias=False)
+        fm_residual = tf.layers.conv2d(fm_residual,  32, (1, 1), strides=(1, 1), padding='same', data_format='channels_last', dilation_rate=(1, 1), activation=None, use_bias=False)
         fm_residual = tf.layers.batch_normalization(fm_residual, training=train_state)
         fm_residual = tf.nn.relu(fm_residual)
-        fm_residual = tf.layers.conv2d(fm_residual,  64, (3, 3), strides=(1, 1), padding='same', data_format='channels_last', dilation_rate=(1, 1), activation=None, use_bias=False)
+        fm_residual = tf.layers.conv2d(fm_residual,  32, (3, 3), strides=(1, 1), padding='same', data_format='channels_last', dilation_rate=(1, 1), activation=None, use_bias=False)
         fm_residual = tf.layers.batch_normalization(fm_residual, training=train_state)
         fm_residual = tf.nn.relu(fm_residual)
-        fm_residual = tf.layers.conv2d(fm_residual, 256, (1, 1), strides=(1, 1), padding='same', data_format='channels_last', dilation_rate=(1, 1), activation=None, use_bias=False)
+        fm_residual = tf.layers.conv2d(fm_residual, 128, (1, 1), strides=(1, 1), padding='same', data_format='channels_last', dilation_rate=(1, 1), activation=None, use_bias=False)
         fm_id       = tf.add(fm_id, fm_residual)
 
     # encoder - level 2 special block x1
@@ -452,9 +351,8 @@ with tf.control_dependencies(update_ops):
 
 # saver
 # saver = tf.train.Saver(max_to_keep=TRAINING_MAX_CHECKPOINTS)
-
 config = tf.ConfigProto()
-config.gpu_options.per_process_gpu_memory_fraction = 0.4
+config.gpu_options.per_process_gpu_memory_fraction = 0.75
 
 # create a session
 session = tf.Session(config=config)
@@ -489,8 +387,8 @@ for epoch_index in range(TRAINING_NUM_EPOCHS):
 
     # display
     print('Epoch {0:3d}: top 1 accuracy on the test set is {1:5.2f} %'.format(epoch_index, (100.0*num_correct)/(TRAINING_BATCH_SIZE*num_batches_test)))
-
     print('Timestamp: %s' % datetime.datetime.now())
+
     # save
     # saver.save(session, TRAINING_CHECKPOINT_FILE.format(epoch_index))
 

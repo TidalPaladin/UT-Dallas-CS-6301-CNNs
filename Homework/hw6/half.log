@@ -1,0 +1,209 @@
+2019-03-02 21:14:36.667137: I tensorflow/core/common_runtime/gpu/g
+ device 0 with properties:
+name: GeForce GTX 970 major: 5 minor: 2 memoryClockRate(GHz): 1.25
+pciBusID: 0000:02:00.0
+totalMemory: 3.95GiB freeMemory: 3.88GiB
+2019-03-02 21:14:36.667161: I tensorflow/core/common_runtime/gpu/g
+g visible gpu devices: 0
+2019-03-02 21:14:36.864254: I tensorflow/core/common_runtime/gpu/g
+ interconnect StreamExecutor with strength 1 edge matrix:
+2019-03-02 21:14:36.864281: I tensorflow/core/common_runtime/gpu/g
+
+2019-03-02 21:14:36.864285: I tensorflow/core/common_runtime/gpu/g
+N
+2019-03-02 21:14:36.864502: I tensorflow/core/common_runtime/gpu/g
+ed TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0
+ physical GPU (device: 0, name: GeForce GTX 970, pci bus id: 0000:
+ity: 5.2)
+Epoch   0: top 1 accuracy on the test set is 38.10 %
+Timestamp: 2019-03-02 21:15:21.513364
+Epoch   1: top 1 accuracy on the test set is 57.84 %
+Timestamp: 2019-03-02 21:15:57.030325
+Epoch   2: top 1 accuracy on the test set is 55.97 %
+Timestamp: 2019-03-02 21:16:32.577265
+Epoch   3: top 1 accuracy on the test set is 59.07 %
+Timestamp: 2019-03-02 21:17:08.154421
+Epoch   4: top 1 accuracy on the test set is 64.11 %
+Timestamp: 2019-03-02 21:17:43.873502
+Epoch   5: top 1 accuracy on the test set is 62.61 %
+Timestamp: 2019-03-02 21:18:19.562991
+Epoch   6: top 1 accuracy on the test set is 67.04 %
+Timestamp: 2019-03-02 21:18:55.150323
+Epoch   7: top 1 accuracy on the test set is 69.14 %
+Timestamp: 2019-03-02 21:19:30.691245
+Epoch   8: top 1 accuracy on the test set is 74.10 %
+Timestamp: 2019-03-02 21:20:06.114378
+Epoch   9: top 1 accuracy on the test set is 73.81 %
+Timestamp: 2019-03-02 21:20:41.557184
+Epoch  10: top 1 accuracy on the test set is 66.12 %
+Timestamp: 2019-03-02 21:21:17.026816
+Epoch  11: top 1 accuracy on the test set is 74.86 %
+Timestamp: 2019-03-02 21:21:52.488397
+Epoch  12: top 1 accuracy on the test set is 75.96 %
+Timestamp: 2019-03-02 21:22:27.931697
+Epoch  13: top 1 accuracy on the test set is 77.41 %
+Timestamp: 2019-03-02 21:23:03.399454
+Epoch  14: top 1 accuracy on the test set is 76.22 %
+Timestamp: 2019-03-02 21:23:38.747400
+Epoch  15: top 1 accuracy on the test set is 79.27 %
+Timestamp: 2019-03-02 21:24:14.227324
+Epoch  16: top 1 accuracy on the test set is 76.88 %
+Timestamp: 2019-03-02 21:24:49.664076
+Epoch  17: top 1 accuracy on the test set is 78.33 %
+Timestamp: 2019-03-02 21:25:25.011253
+Epoch  18: top 1 accuracy on the test set is 79.39 %
+Timestamp: 2019-03-02 21:26:00.330722
+Epoch  19: top 1 accuracy on the test set is 80.25 %
+Timestamp: 2019-03-02 21:26:35.662561
+Epoch  20: top 1 accuracy on the test set is 80.40 %
+Timestamp: 2019-03-02 21:27:10.945283
+Epoch  21: top 1 accuracy on the test set is 79.13 %
+Timestamp: 2019-03-02 21:27:46.231101
+Epoch  22: top 1 accuracy on the test set is 79.15 %
+Timestamp: 2019-03-02 21:28:21.471420
+Epoch  23: top 1 accuracy on the test set is 79.15 %
+Timestamp: 2019-03-02 21:28:56.715821
+Epoch  24: top 1 accuracy on the test set is 79.96 %
+Timestamp: 2019-03-02 21:29:32.006632
+Epoch  25: top 1 accuracy on the test set is 81.85 %
+Timestamp: 2019-03-02 21:30:07.282156
+Epoch  26: top 1 accuracy on the test set is 81.52 %
+Timestamp: 2019-03-02 21:30:42.556718
+Epoch  27: top 1 accuracy on the test set is 78.21 %
+Timestamp: 2019-03-02 21:31:17.860077
+Epoch  28: top 1 accuracy on the test set is 79.39 %
+Timestamp: 2019-03-02 21:31:53.154712
+Epoch  29: top 1 accuracy on the test set is 82.32 %
+Timestamp: 2019-03-02 21:32:28.394071
+Epoch  30: top 1 accuracy on the test set is 80.43 %
+Timestamp: 2019-03-02 21:33:03.717760
+Epoch  31: top 1 accuracy on the test set is 82.40 %
+Timestamp: 2019-03-02 21:33:39.063066
+Epoch  32: top 1 accuracy on the test set is 83.07 %
+Timestamp: 2019-03-02 21:34:14.425208
+Epoch  33: top 1 accuracy on the test set is 83.60 %
+Timestamp: 2019-03-02 21:34:49.752778
+Epoch  34: top 1 accuracy on the test set is 77.70 %
+Timestamp: 2019-03-02 21:35:25.072666
+Epoch  35: top 1 accuracy on the test set is 84.27 %
+Timestamp: 2019-03-02 21:36:00.401484
+Epoch  36: top 1 accuracy on the test set is 79.31 %
+Timestamp: 2019-03-02 21:36:35.751532
+Epoch  37: top 1 accuracy on the test set is 81.82 %
+Timestamp: 2019-03-02 21:37:11.088387
+Epoch  38: top 1 accuracy on the test set is 81.62 %
+Timestamp: 2019-03-02 21:37:46.407607
+Epoch  39: top 1 accuracy on the test set is 83.91 %
+Timestamp: 2019-03-02 21:38:21.774465
+Epoch  40: top 1 accuracy on the test set is 82.76 %
+Timestamp: 2019-03-02 21:38:57.119389
+Epoch  41: top 1 accuracy on the test set is 83.17 %
+Timestamp: 2019-03-02 21:39:32.483016
+Epoch  42: top 1 accuracy on the test set is 78.17 %
+Timestamp: 2019-03-02 21:40:07.861941
+Epoch  43: top 1 accuracy on the test set is 83.95 %
+Timestamp: 2019-03-02 21:40:43.235965
+Epoch  44: top 1 accuracy on the test set is 83.16 %
+Timestamp: 2019-03-02 21:41:18.577247
+Epoch  45: top 1 accuracy on the test set is 80.18 %
+Timestamp: 2019-03-02 21:41:53.892503
+Epoch  46: top 1 accuracy on the test set is 83.11 %
+Timestamp: 2019-03-02 21:42:29.196503
+Epoch  47: top 1 accuracy on the test set is 84.72 %
+Timestamp: 2019-03-02 21:43:04.542741
+Epoch  48: top 1 accuracy on the test set is 81.60 %
+Timestamp: 2019-03-02 21:43:39.833087
+Epoch  49: top 1 accuracy on the test set is 84.60 %
+Timestamp: 2019-03-02 21:44:15.091553
+Epoch  50: top 1 accuracy on the test set is 83.97 %
+Timestamp: 2019-03-02 21:44:50.392294
+Epoch  51: top 1 accuracy on the test set is 82.15 %
+Timestamp: 2019-03-02 21:45:25.667861
+Epoch  52: top 1 accuracy on the test set is 85.07 %
+Timestamp: 2019-03-02 21:46:00.925049
+Epoch  53: top 1 accuracy on the test set is 84.90 %
+Timestamp: 2019-03-02 21:46:36.245056
+Epoch  54: top 1 accuracy on the test set is 81.51 %
+Timestamp: 2019-03-02 21:47:11.526513
+Epoch  55: top 1 accuracy on the test set is 84.10 %
+Timestamp: 2019-03-02 21:47:46.818563
+Epoch  56: top 1 accuracy on the test set is 80.11 %
+Timestamp: 2019-03-02 21:48:22.142624
+Epoch  57: top 1 accuracy on the test set is 84.97 %
+Timestamp: 2019-03-02 21:48:57.456252
+Epoch  58: top 1 accuracy on the test set is 83.91 %
+Timestamp: 2019-03-02 21:49:32.778355
+Epoch  59: top 1 accuracy on the test set is 86.16 %
+Timestamp: 2019-03-02 21:50:08.097810
+Epoch  60: top 1 accuracy on the test set is 83.75 %
+Timestamp: 2019-03-02 21:50:43.423004
+Epoch  61: top 1 accuracy on the test set is 83.90 %
+Timestamp: 2019-03-02 21:51:18.753794
+Epoch  62: top 1 accuracy on the test set is 83.74 %
+Timestamp: 2019-03-02 21:51:54.073005
+Epoch  63: top 1 accuracy on the test set is 82.20 %
+Timestamp: 2019-03-02 21:52:29.358896
+Epoch  64: top 1 accuracy on the test set is 89.08 %
+Timestamp: 2019-03-02 21:53:04.715703
+Epoch  65: top 1 accuracy on the test set is 89.21 %
+Timestamp: 2019-03-02 21:53:40.133766
+Epoch  66: top 1 accuracy on the test set is 89.37 %
+Timestamp: 2019-03-02 21:54:15.599261
+Epoch  67: top 1 accuracy on the test set is 89.19 %
+Timestamp: 2019-03-02 21:54:50.896194
+Epoch  68: top 1 accuracy on the test set is 89.24 %
+Timestamp: 2019-03-02 21:55:26.254830
+Epoch  69: top 1 accuracy on the test set is 89.23 %
+Timestamp: 2019-03-02 21:56:01.573300
+Epoch  70: top 1 accuracy on the test set is 89.27 %
+Timestamp: 2019-03-02 21:56:36.907858
+Epoch  71: top 1 accuracy on the test set is 89.31 %
+Timestamp: 2019-03-02 21:57:12.198087
+2019-03-02 21:57:12.308068: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1511] Adding visible gpu devices: 0
+2019-03-02 21:57:12.308107: I tensorflow/core/common_runtime/gpu/gpu_device.cc:982] Device interconnect StreamExecutor with strength 1 edge matrix:
+2019-03-02 21:57:12.308114: I tensorflow/core/common_runtime/gpu/gpu_device.cc:988]      0
+2019-03-02 21:57:12.308118: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1001] 0:   N
+2019-03-02 21:57:12.308280: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1115] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 3032 MB memory) -> physical GPU (device: 0, name: GeForce GTX 970, pci bus id: 0000:02:00.0, compute capability: 5.2)
+Predicted label: 3 and actual label: 3
+QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
+Predicted label: 8 and actual label: 8
+Predicted label: 8 and actual label: 8
+Predicted label: 0 and actual label: 0
+Predicted label: 6 and actual label: 6
+Predicted label: 6 and actual label: 6
+Predicted label: 1 and actual label: 1
+Predicted label: 6 and actual label: 6
+Predicted label: 3 and actual label: 3
+Predicted label: 1 and actual label: 1
+Predicted label: 0 and actual label: 0
+Predicted label: 9 and actual label: 9
+Predicted label: 5 and actual label: 5
+Predicted label: 7 and actual label: 7
+Predicted label: 9 and actual label: 9
+Predicted label: 8 and actual label: 8
+Predicted label: 5 and actual label: 5
+Predicted label: 7 and actual label: 7
+Predicted label: 8 and actual label: 8
+Predicted label: 6 and actual label: 6
+Predicted label: 7 and actual label: 7
+Predicted label: 0 and actual label: 0
+Predicted label: 4 and actual label: 4
+Predicted label: 9 and actual label: 9
+Predicted label: 5 and actual label: 5
+Predicted label: 2 and actual label: 2
+Predicted label: 4 and actual label: 4
+Predicted label: 0 and actual label: 0
+Predicted label: 9 and actual label: 9
+Predicted label: 6 and actual label: 6
+Predicted label: 6 and actual label: 6
+Predicted label: 5 and actual label: 5
+Predicted label: 4 and actual label: 4
+Predicted label: 5 and actual label: 5
+Predicted label: 9 and actual label: 9
+Predicted label: 3 and actual label: 2
+Predicted label: 4 and actual label: 4
+Predicted label: 9 and actual label: 1
+Predicted label: 9 and actual label: 9
+Predicted label: 5 and actual label: 5
+Predicted label: 4 and actual label: 4
+Predicted label: 6 and actual label: 6

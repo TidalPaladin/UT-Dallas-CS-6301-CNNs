@@ -1,0 +1,175 @@
+% ---------
+%  Compile with "pdflatex hw1".
+% --------
+%!TEX TS-program = pdflatex
+%!TEX encoding = UTF-8 Unicode
+
+% Template borrowed from Jeff Erickson.
+
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}		% Allow some non-ASCII Unicode in source
+\usepackage{jeffe, handout,graphicx}
+\usepackage{forest}
+\usepackage{mathtools}
+\usepackage{tikz, ifthen, etoolbox}
+\usepackage{float}
+\usetikzlibrary{positioning}
+\newcommand{\pd}{\partial}
+\newcommand{\bs}{\boldsymbol}
+\newcommand{\ifstringequal}[4]{%
+  \ifnum\pdfstrcmp{#1}{#2}=0
+  #3%
+  \else
+  #4%
+  \fi
+}
+
+
+% =========================================================
+%   Define common stuff for solution headers
+% =========================================================
+\Class{CS 6301.503}
+\Semester{Spring 2019}
+\Authors{1}
+\AuthorOne{Scott C. Waggener}{scw180000}
+%\Section{}
+
+% =========================================================
+\begin{document}
+\HomeworkHeader{6 (Design)}{1}% homework number, problem number
+% ---------------------------------------------------------
+Read
+\begin{solution}
+	Complete
+\end{solution}
+
+% =========================================================
+\HomeworkHeader{6 (Design)}{2}% homework number, problem number
+% ---------------------------------------------------------
+Read
+\begin{solution}
+	Complete
+\end{solution}
+
+% =========================================================
+\HomeworkHeader{6 (Design)}{3}% homework number, problem number
+% ---------------------------------------------------------
+Read
+\begin{solution}
+	Complete
+\end{solution}
+
+% =========================================================
+\HomeworkHeader{6 (Design)}{4}% homework number, problem number
+% ---------------------------------------------------------
+Read
+\begin{solution}
+	Complete
+\end{solution}
+
+% =========================================================
+\HomeworkHeader{6 (Design)}{5}% homework number, problem number
+% ---------------------------------------------------------
+Compute the receptive field size at the input to the global average pooling layer for ResNet 50.
+
+\begin{solution}
+	pass
+\end{solution}
+	Stride then add
+\begin{proof}
+	\begin{align}
+		\bigg(
+			\Big(
+				\underbrace{1+2*3}_{\text{conv5}}
+				+
+				\underbrace{2*6}_{\text{conv4}}
+				+
+				\underbrace{2*4}_{\text{conv4}}
+				+
+				\underbrace{2*3}_{\text{conv4}}
+			\Big)
+			\underbrace{*2+2}_{\text{max pool}}
+		\bigg)
+		\underbrace{*2+6}_{\text{conv1}}
+		\\
+		=142
+	\end{align}
+\end{proof}
+
+% =========================================================
+\HomeworkHeader{6 (Design)}{6}% homework number, problem number
+% ---------------------------------------------------------
+\begin{enumerate}[(a)]
+	\item How does the accuracy of the half wide version copare to the original
+		version?
+	\begin{solution}
+		The accuracy at the final epoch for the full and half versions are
+		\begin{align}
+			\text{Full} &= 91.03\%
+			&
+			\text{Half} &= 89.31\%
+		\end{align}
+	\end{solution}
+	\begin{proof}
+	\end{proof}
+
+	\item How long does an epoch of training take for both versions?
+	\begin{solution}
+		The times for epoch $3$ for both models (trained on GTX970) are
+		\begin{align}
+			\text{Full} &= 59s
+			&
+			\text{Half} &= 36s
+		\end{align}
+	\end{solution}
+	\begin{proof}
+	\end{proof}
+
+	\item Approximate how feature map memory, filter memory, and compute change
+		between the full and half width versions.
+	\begin{solution}
+
+		\begin{align}
+			&\text{Feature map memory} = \frac{1}{2}
+			\\
+			&\text{Filter memory} = \frac{1}{2}
+			\\
+			&\text{Compute} = \frac{1}{4}
+		\end{align}
+	\end{solution}
+	\begin{proof}
+		As an approximation we can consider how CNN style 2D convolution layers
+		will be impacted by the width reduction, as Resnet is primarily
+		composed of such layers. For filter and feature map memory we will see
+		a reduction approximately equal to the reduction in width. The
+		dimensions of the filters and feature maps remain unchanged, but we are
+		only considering half of the original feature maps and filters.
+		\newline
+
+		Recall that compute for CNN style 2D convolution depends on $N_o * N_i$
+		which are both reduced by half, leading to a total reduction of $1/4$.
+	\end{proof}
+
+\end{enumerate}
+% =========================================================
+\HomeworkHeader{6 (Design)}{7}% homework number, problem number
+% ---------------------------------------------------------
+\begin{solution}
+\end{solution}
+\begin{proof}
+\end{proof}
+% =========================================================
+\HomeworkHeader{6 (Design)}{8}% homework number, problem number
+% ---------------------------------------------------------
+\begin{solution}
+\end{solution}
+\begin{proof}
+\end{proof}
+% =========================================================
+\HomeworkHeader{6 (Design)}{9}% homework number, problem number
+% ---------------------------------------------------------
+\begin{solution}
+\end{solution}
+\begin{proof}
+\end{proof}
+\end{document}
