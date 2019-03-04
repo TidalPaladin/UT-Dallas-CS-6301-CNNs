@@ -155,6 +155,108 @@ Compute the receptive field size at the input to the global average pooling laye
 \HomeworkHeader{6 (Design)}{7}% homework number, problem number
 % ---------------------------------------------------------
 \begin{solution}
+	The network design will be based on Inception v4. To inform our choice
+	of network architecture we can use the given hint for an expected input
+	global average pooling and think backwards from here. Obviously for
+	CIFAR-10 we will have $10$ classes, so we need to choose $N_i$ to global
+	average pooling somewhere above $10$, call it $50$.
+
+\begin{figure}[H]
+	\noindent\resizebox{\textwidth}{!}{
+	\begin{tikzpicture}
+
+		% Define the macro.
+		% 1st argument: Height and width of the layer rectangle slice.
+		% 2nd argument: Depth of the layer slice
+		% 3rd argument: X Offset --> use it to offset layers from previously drawn layers.
+		% 4th argument: Options for filldraw.
+		% 5th argument: Text to be placed below this layer.
+		% 6th argument: Y Offset --> Use it when an output needs to be fed to
+		%	multiple layers that are on the same X offset.
+
+		\newcommand{\networkLayer}[6]{
+			\def\a{#1} % Used to distinguish input resolution for current layer.
+			\def\b{0.02}
+			\def\c{#2} % Width of the cube to distinguish number of input channels for current layer.
+			\def\t{#3} % X offset for current layer.
+			\def\d{#4} % Y offset for current layer.
+
+			% Draw the layer body.
+			\draw[line width=0.3mm](\c+\t,0,\d)
+				--(\c+\t,\a,\d)
+				--(\t,\a,\d);
+			\draw[line width=0.3mm](\t,0,\a+\d)
+				--(\c+\t,0,\a+\d) node[midway,below] {#6}
+				--(\c+\t,\a,\a+\d)
+				--(\t,\a,\a+\d)
+				--(\t,0,\a+\d);
+			\draw[line width=0.3mm](\c+\t,0,\d) -- (\c+\t,0,\a+\d);
+			\draw[line width=0.3mm](\c+\t,\a,\d) -- (\c+\t,\a,\a+\d);
+			\draw[line width=0.3mm](\t,\a,\d) -- (\t,\a,\a+\d);
+
+			% Recolor visible surfaces
+			\filldraw[#5] (\t+\b,\b,\a+\d)
+				--(\c+\t-\b,\b,\a+\d)
+				--(\c+\t-\b,\a-\b,\a+\d)
+				--(\t+\b,\a-\b,\a+\d)
+				--(\t+\b,\b,\a+\d); % front plane
+			\filldraw[#5] (\t+\b,\a,\a-\b+\d)
+				--(\c+\t-\b,\a,\a-\b+\d)
+				--(\c+\t-\b,\a,\b+\d)
+				--(\t+\b,\a,\b+\d);
+
+			% Colored slice.
+			\ifthenelse {\equal{#5} {}}
+			{} % Do not draw colored slice if #4 is blank.
+			{\filldraw[#5] (\c+\t,\b,\a-\b+\d) --
+				(\c+\t,\b,\b+\d) --
+				(\c+\t,\a-\b,\b+\d) --
+				(\c+\t,\a-\b,\a-\b+\d);
+			} % Else, draw a colored slice.
+		}
+
+		% INPUT
+		%\node[] (input image) at (-3.75,0.5) {\includegraphics[height=30mm]{lenna.png}};
+		\networkLayer{3.0}{0.5}{-2}{0.0}{color=gray!80}{
+			$3 \times 32 \times 32$
+		}
+
+
+		% ENCODER
+		\networkLayer{3.0}{0.1}{0.0}{0.0}{color=white}{Inc-A}    % S1
+		\foreach \i in {1,...,4}{
+			\networkLayer{3.0}{0.1}{\i*0.3}
+			{0.0}{color=white}{};
+		}
+
+		\networkLayer{2.5}{0.1}{1.5}{0.0}{color=red}{Red-A}    % S1
+
+		\foreach \i in {0,...,9}{
+			\networkLayer{2.5}{0.2}{2.5+0.4*\i}{0.0}
+			{color=white}{}    % S1
+		}
+		\networkLayer{2.5}{0.2}{6.5}{0.0}{color=white}{Inc-B}    % S1
+
+		\networkLayer{2.5}{0.1}{7.5}{0.0}{color=red}{Red-B}    % S1
+
+		\foreach \i in {0,...,4}{
+			\networkLayer{2}{0.2}{8.5+0.4*\i}{0.0}
+			{color=white}{}    % S1
+		}
+		\networkLayer{2}{0.2}{10.9}{0.0}{color=white}{Inc-C}    % S1
+
+		\networkLayer{2}{0.1}{12}{0.0}{color=red}{Avg Pool}    % S1
+
+		% OUTPUT
+		\networkLayer{2}{0.05}{17}{0.0}{color=red!40}{}          % Pixelwise segmentation with classes.
+		%\node[] (output image) at (18,0.5) {\includegraphics[height=30mm]{vermeer.jpg}};
+
+
+	\end{tikzpicture}
+	}
+	\caption{Example CNN.}
+	\label{fig:cnn}
+\end{figure}
 \end{solution}
 \begin{proof}
 \end{proof}
