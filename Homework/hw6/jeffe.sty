@@ -46,7 +46,7 @@
 \def\range#1#2{#1\,..\,#2}
 
 %
-%  I give up.  These are in the wrong font, but my kludged versions 
+%  I give up.  These are in the wrong font, but my kludged versions
 %  LOOK like kludges, especially \Z, \Q, and \C.
 %
 \def\Real{\mathbb{R}}
@@ -66,14 +66,14 @@
 \def\CP{\Complex\Proj}
 
 % ---- OPERATORS (requires amsmath) ----
-\def\aff{\operatorname{aff}}		
+\def\aff{\operatorname{aff}}
 \def\area{\operatorname{area}}
 \def\argmax{\operatornamewithlimits{arg\,max}}
 \def\argmin{\operatornamewithlimits{arg\,min}}
 \def\Aut{\operatorname{Aut}}		% Automorphism group
 \def\card{\operatorname{card}}	% cardinality, deprecated for \abs
-\def\conv{\operatorname{conv}}	
-\def\diam{\operatorname{diam}}	
+\def\conv{\operatorname{conv}}
+\def\diam{\operatorname{diam}}
 \def\E{\operatorname{E}}		% Expectation: $\E[X]$ (like \Pr)
 \def\EE{\operatornamewithlimits{E}}
 \def\Hom{\operatorname{Hom}}	% Homomorphism group
@@ -135,8 +135,8 @@
 \def\ceil#1{\lceil #1 \rceil}
 \def\seq#1{\langle #1 \rangle}
 \def\set#1{\{ #1 \}}
-\def\abs#1{\mathopen| #1 \mathclose|}		% use instead of $|x|$ 
-\def\norm#1{\mathopen\| #1 \mathclose\|}	% use instead of $\|x\|$ 
+\def\abs#1{\mathopen| #1 \mathclose|}		% use instead of $|x|$
+\def\norm#1{\mathopen\| #1 \mathclose\|}	% use instead of $\|x\|$
 \def\indic#1{\big[#1\big]}			% indicator variable; Iverson notation
 							% e.g., Kronecker delta = [x=0]
 
@@ -254,7 +254,7 @@
 %
 \newif\ifneedqed
 \global\needqedfalse
-\@ifundefined{square}{\let\square\Box}{}	% grumble latex2e 
+\@ifundefined{square}{\let\square\Box}{}	% grumble latex2e
 \def\QED{\ensuremath{{\square}}}
 \def\markatright#1{\leavevmode\unskip\nobreak\quad\hspace*{\fill}{#1}}
 \def\qed{\ifneedqed\markatright{\QED}\global\needqedfalse\else\null\fi}
@@ -317,7 +317,7 @@
 % ----------------------------------------------------------------------
 %  Include a file verbatim.  Searches the TEXINPUTS path for the file,
 %  even though that's probably not what you really want.  Stolen from
-%  “verbatimfiles.sty” by Chris Rowley and others.  [Don't use their 
+%  “verbatimfiles.sty” by Chris Rowley and others.  [Don't use their
 %  \vertbatimlisting macro; it has some bizarre side-effects!]
 % ----------------------------------------------------------------------
 \def\verbinput#1{
@@ -375,7 +375,7 @@
 \setlength{\marginparwidth}{\paperwidth}
 \addtolength{\marginparwidth}{-\oddsidemargin}
 \addtolength{\marginparwidth}{-\textwidth}
-\addtolength{\marginparwidth}{-1.0\marginparsep} 
+\addtolength{\marginparwidth}{-1.0\marginparsep}
 \addtolength{\marginparwidth}{-1.0in}
 
 %----------------------------------------------------------------------
@@ -503,7 +503,7 @@ See {#1} for the most recent revision.
 %	\linenumbers
 %	\renewcommand\linenumberfont{\normalfont\tiny\sffamily\color{Gray}}
 %	\setlength\linenumbersep{2em}
-%	
+%
 %	% Make amsmath environments play well with lineno
 %	% Thanks to tex.stackexchange
 %	\newcommand*\patchAmsMathEnvironmentForLineno[1]{%
@@ -511,7 +511,7 @@ See {#1} for the most recent revision.
 %	 \expandafter\let\csname oldend#1\expandafter\endcsname\csname end#1\endcsname
 %	 \renewenvironment{#1}%
 %	 {\linenomath\csname old#1\endcsname}%
-%	 {\csname oldend#1\endcsname\endlinenomath}}% 
+%	 {\csname oldend#1\endcsname\endlinenomath}}%
 %	\newcommand*\patchBothAmsMathEnvironmentsForLineno[1]{%
 %	 \patchAmsMathEnvironmentForLineno{#1}%
 %	 \patchAmsMathEnvironmentForLineno{#1*}}%

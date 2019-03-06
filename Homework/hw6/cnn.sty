@@ -1,0 +1,250 @@
+\usepackage{graphicx}
+\usepackage{forest}
+\usepackage{mathtools}
+\usepackage{tikz, ifthen, etoolbox}
+\usepackage{float}
+\usetikzlibrary{positioning, decorations.pathreplacing, calc, fit}
+\newcommand{\ifstringequal}[4]{%
+  \ifnum\pdfstrcmp{#1}{#2}=0
+  #3%
+  \else
+  #4%
+  \fi
+}
+
+\makeatletter
+\tikzset{
+	pics/named scope code/.style={
+		code={
+			\tikz@fig@mustbenamed%
+			\begin{scope}[local bounding box/.expanded=\tikz@fig@name]
+				#1
+			\end{scope}
+		}
+	}
+}
+\makeatother
+
+% Define the macro.
+% 1st argument: Height and width of the layer rectangle slice.
+% 2nd argument: Depth of the layer slice
+% 3rd argument: X Offset --> use it to offset layers from previously drawn layers.
+% 4th argument: Options for filldraw.
+% 5th argument: Text to be placed below this layer.
+% 6th argument: Y Offset --> Use it when an output needs to be fed to
+%	multiple layers that are on the same X offset.
+\newcommand{\networkLayer}[6]{
+	\def\a{#1} % Used to distinguish input resolution for current layer.
+	\def\b{0.02}
+	\def\c{#2} % Width of the cube
+	\def\t{#3} % X offset for current layer.
+	\def\d{#4} % Y offset for current layer.
+
+	% Draw the layer body.
+	\draw[line width=0.3mm](\c+\t,0,\d)
+		--(\c+\t,\a,\d)
+		--(\t,\a,\d);
+	\draw[line width=0.3mm](\t,0,\a+\d)
+		--(\c+\t,0,\a+\d) node[midway,below] {#6}
+		--(\c+\t,\a,\a+\d)
+		--(\t,\a,\a+\d)
+		--(\t,0,\a+\d);
+	\draw[line width=0.3mm](\c+\t,0,\d) -- (\c+\t,0,\a+\d);
+	\draw[line width=0.3mm](\c+\t,\a,\d) -- (\c+\t,\a,\a+\d);
+	\draw[line width=0.3mm](\t,\a,\d) -- (\t,\a,\a+\d);
+
+	% Recolor visible surfaces
+	\filldraw[#5] (\t+\b,\b,\a+\d)
+		--(\c+\t-\b,\b,\a+\d)
+		--(\c+\t-\b,\a-\b,\a+\d)
+		--(\t+\b,\a-\b,\a+\d)
+		--(\t+\b,\b,\a+\d); % front plane
+	\filldraw[#5] (\t+\b,\a,\a-\b+\d)
+		--(\c+\t-\b,\a,\a-\b+\d)
+		--(\c+\t-\b,\a,\b+\d)
+		--(\t+\b,\a,\b+\d);
+
+	% Colored slice.
+	\ifthenelse {\equal{#5} {}}
+	{} % Do not draw colored slice if #4 is blank.
+	{\filldraw[#5] (\c+\t,\b,\a-\b+\d) --
+		(\c+\t,\b,\b+\d) --
+		(\c+\t,\a-\b,\b+\d) --
+		(\c+\t,\a-\b,\a-\b+\d);
+	} % Else, draw a colored slice.
+}
+
+
+% 1st argument: Rectangle height
+% 2nd argument: Rectangle width
+% 3rd argument: X Offset --> use it to offset layers from previously drawn layers.
+% 4th argument: Options for filldraw.
+% 5th argument: Text to be placed below this layer.
+% 6th argument: Y Offset --> Use it when an output needs to be fed to
+%	multiple layers that are on the same X offset.
+\newcommand{\featureVector}[6]{
+	\def\a{#1} % Used to distinguish input resolution for current layer.
+	\def\b{0.02}
+	\def\c{#2} % Width of the cube
+	\def\t{#3} % X offset for current layer.
+	\def\d{#4} % Y offset for current layer.
+	\def\e{#2}
+
+	% Draw the layer body.
+	\draw[line width=0.3mm](\c+\t,0,\d)
+		--(\c+\t,\e,\d)
+		--(\t,\e,\d);
+	\draw[line width=0.3mm](\t,0,\a+\d)
+		--(\c+\t,0,\a+\d) node[midway,below] {#6}
+		--(\c+\t,\e,\a+\d)
+		--(\t,\e,\a+\d)
+		--(\t,0,\a+\d);
+	\draw[line width=0.3mm](\c+\t,0,\d) -- (\c+\t,0,\a+\d);
+	\draw[line width=0.3mm](\c+\t,\e,\d) -- (\c+\t,\e,\a+\d);
+	\draw[line width=0.3mm](\t,\e,\d) -- (\t,\e,\a+\d);
+}
+
+
+% Define the macro.
+% 1st argument: Height and width of the layer rectangle slice.
+% 2nd argument: Depth of the layer slice
+% 3rd argument: X Offset --> use it to offset layers from previously drawn layers.
+% 4th argument: Options for filldraw.
+% 5th argument: Text to be placed below this layer.
+% 6th argument: Y Offset --> Use it when an output needs to be fed to
+%	multiple layers that are on the same X offset.
+% 7th argument: Repeat count
+% 8th argument: Internal spacing
+\newcommand{\repeatLayer}[8]{
+
+	\foreach \i in {1,...,#7}{
+		\networkLayer{#1}{#2}{#3+\i*#8+\i*#2}{#4}{#5}{};
+	}
+
+	\draw [decorate,decoration={brace,amplitude=10pt},xshift=0.4pt,yshift=-0.4pt]
+	(#3+#7*#8+#7*#2+#2,#4-.2,#4+#1) -- (#3+#8+#2,#4-.2,#4+#1) node[midway,yshift=-0.6cm] {#6};
+}
+
+
+\tikzset{
+	conv2d/decorate/text/.style={
+		midway,
+		align=center,
+		below=1.5em,
+		\tikzpictextoptions
+	},
+	conv2d/dims/text/.style={
+		at end,
+		right=0,
+		rotate=45,
+		align=left,
+		text width=2cm,
+		\tikzpictextoptions
+	},
+	vector/.style={
+		rectangle
+	},
+	pics/.cd,
+	pic conv2d/.style args={res #1 depth #2}{
+		/tikz/line width=0.3mm,
+		/tikz/node distance=0.5cm,
+		named scope code={
+			\def\resolution{#1}
+			\def\depth{#2}
+
+			% Draw the front flat rectangle
+			\filldraw (0,0,0)
+				rectangle ++(\depth, \resolution, 0);
+			% Draw the top 3d rectangle
+			\filldraw (0,\resolution, 0)
+				-- ++(0,0,-\resolution)
+				-- ++(\depth,0,0)
+				-- ++(0,0,\resolution);
+			% Draw the right 3d square
+			\filldraw (\depth,\resolution, 0)
+				-- ++(0,0,-\resolution)
+				-- ++(0,-\resolution,0)
+				-- ++(0,0,\resolution)
+				-- ++(0,\resolution,0);
+
+			% Draw node at top center
+			\node (-top) at
+				(\depth*0.5, \resolution, -\resolution*0.5){};
+
+			% Draw anchor nodes
+			\path (0, 0, 0)
+				node[at end] (-south west) {}
+				-- ++(0, \resolution, 0)
+				node[at end] (-north west){}
+				-- ++(\depth, 0, 0)
+				node[at end] (-north east){}
+				-- ++(0, -\resolution, 0)
+				node[at end] (-south east){}
+				-- (0, 0, 0);
+		}
+    },
+	pic conv2d/repeat/.style args={res #1 depth #2 repeat #3 sep #4}{
+		named scope code={
+			% Loop over repeat count
+			\def\resolution{#1}
+			\def\depth{#2}
+			\def\repeat{#3}
+			\def\sep{#4}
+			\foreach \i [count=\j] in {0, ..., \repeat-1}{
+				\begin{scope}[ shift={(\sep*\i+\depth*\i,0,0)} ]
+					\pic (-\j) at (0, 0) {pic conv2d={res #1 depth #2}};
+				\end{scope}
+			}
+
+			% Draw anchor nodes
+			\path (0, 0, 0)
+				node[at end] (-south west) {}
+				-- ++(0, \resolution, 0)
+				node[at end] (-north west){}
+				-- ++(\depth*\repeat+\sep*\repeat-\sep, 0, 0)
+				node[at end] (-north east){}
+				-- ++(0, -\resolution, 0)
+				node[at end] (-south east){}
+				-- (0, 0, 0);
+		}
+	},
+	pic conv2d/repeat/decorate/.style args={res #1 depth #2 repeat #3 sep #4}{
+		inherit conv2d/repeat/.style,
+		/tikz/decoration={
+			brace,
+			amplitude=1em,
+			mirror,
+		},
+		named scope code={
+
+			% Draw repeat layer pic
+			\pic at (0, 0) {
+				pic conv2d/repeat={res #1 depth #2 repeat #3 sep #4}
+			};
+
+			% Draw decorator
+			\pgfmathparse{#2*#3+#4*#3-#4}
+			\let\repeatwidth=\pgfmathresult
+			\draw[decorate] (0, -0.1, 0)
+				-- node[conv2d/decorate/text, text width=\repeatwidth cm] {
+					\tikzpictext
+				}
+				++(\repeatwidth, 0, 0);
+		}
+	},
+	pic conv2d/dims/.style args={res #1 depth #2 to #3 text #4}{
+		inherit conv2d/.style,
+		named scope code={
+			% Draw repeat layer pic
+			\pic at (0, 0) {
+				pic conv2d={res #1 depth #2}
+			};
+
+			% Draw label
+			\path[draw, -] (#2*0.5, #1, -#1)
+				-- (#2*0.5, #3, -#1)
+				-- ++(0, 0, -1)
+				node[conv2d/dims/text] {#4};
+		}
+	},
+}

@@ -1,0 +1,106 @@
+% ---------
+%  Compile with "pdflatex hw1".
+% --------
+%!TEX TS-program = pdflatex
+%!TEX encoding = UTF-8 Unicode
+
+% Template borrowed from Jeff Erickson.
+
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}		% Allow some non-ASCII Unicode in source
+\usepackage{jeffe, handout,graphicx}
+\usepackage{forest}
+\usepackage{mathtools}
+\usepackage{tikz, ifthen, etoolbox}
+\usepackage{float}
+\usepackage{cnn}
+\usetikzlibrary{positioning}
+\newcommand{\pd}{\partial}
+\newcommand{\bs}{\boldsymbol}
+
+% =========================================================
+%   Define common stuff for solution headers
+% =========================================================
+\Class{CS 6301.503}
+\Semester{Spring 2019}
+\Authors{1}
+\AuthorOne{Scott C. Waggener}{scw180000}
+%\Section{}
+% =========================================================
+\begin{document}
+\HomeworkHeader{6 (Design)}{7}% homework number, problem number
+% ---------------------------------------------------------
+\begin{solution}
+	The network design will be based on Inception v4. To inform our choice
+	of network architecture we can use the given hint for an expected input
+	global average pooling and think backwards from here. Obviously for
+	CIFAR-10 we will have $10$ classes, so we need to choose $N_i$ to global
+	average pooling somewhere above $10$, call it $50$.
+
+\begin{figure}[H]
+	\begin{tikzpicture}
+		\tikzset{
+			cnn/.style={
+				fill=black!20
+			},
+			pool/.style={
+				fill=red!50
+			}
+		}
+
+		% INPUT
+		%\node[] (input image) at (-3.75,0.5) {\includegraphics[height=30mm]{lenna.png}};
+		%\networkLayer{3.0}{0.1}{0}{0.0}{color=gray!80}{
+			%$3 \times 32 \times 32$
+		%}
+
+
+		% ENCODER
+		%\repeatLayer{3}{0.1}{0.5}{0.0}{color=white}{Inc-A}{5}{0.15}    % S1
+
+		%\networkLayer{3}{0.1}{2.2}{0.0}{color=red}{Red-A}    % S1
+
+		%\repeatLayer{2}{0.4}{2}{0.0}{color=white}{Inc-B}{10}{0.2}    % S1
+
+		%\networkLayer{2}{0.4}{9}{0.0}{color=red}{Red-B}    % S1
+
+		%\repeatLayer{1}{1}{9}{0.0}{color=white}{Inc-C}{5}{0.3}    % S1
+
+		%\featureVector{2}{0.3}{18}{0.0}{color=red!40}{Avg Pool}    % S1
+
+		%\pic[conv2d res=2, conv2d depth=0.5, conv2d repeat=3] (A) at (10,0) {conv2d};
+		\def\groupsep{0.4cm}
+
+		\pic[cnn] (A) at (0,0,0) {
+			pic conv2d/dims={res 3 depth 0.2 to 4 text Test this}
+		};
+		\pic[cnn, pic text=Inception A] (A) {
+			pic conv2d/repeat/decorate={res 3 depth 0.2 repeat 5 sep 0.2},
+		};
+
+		\pic[pool, right=\groupsep of A-south east] (A2)  {
+			pic conv2d/dims={res 3 depth 0.2 to 4 text $10 \times 7 \times 7$}
+		};
+
+		\pic[cnn, right=\groupsep of A2-south east] (B) {
+			pic conv2d/dims={res 2 depth 0.4 to 4 text $20 \times 5 \times 5$}
+		};
+		\pic[cnn, pic text=Inception B, right=\groupsep of A2-south east] (B) {
+			pic conv2d/repeat/decorate={res 2 depth 0.4 repeat 10 sep 0.2}
+		};
+		\pic[pool, right=\groupsep of B-south east] (B2)  {
+			pic conv2d={res 2 depth 0.4}
+		};
+
+		\pic[cnn, pic text=Inception C, right=\groupsep of B2-south east] (C)  {
+			pic conv2d/repeat/decorate={res 1 depth 0.6 repeat 5 sep 0.2}
+		};
+
+		% OUTPUT
+		%\networkLayer{2}{0.05}{17}{0.0}{color=red!40}{}
+
+	\end{tikzpicture}
+\end{figure}
+\end{solution}
+
+\end{document}
