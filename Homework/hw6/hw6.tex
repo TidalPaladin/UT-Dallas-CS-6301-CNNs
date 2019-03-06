@@ -172,21 +172,28 @@ Compute the receptive field size at the input to the global average pooling laye
 
 		% Input
 		\pic[inp] (input) at (0,0,0) {
-				pic conv2d/dims={res 3 depth 0.2 to 4
+				pic conv2d={res 3 depth 0.2}
+		};
+
+		\pic[inp] (input) at (0,0,0) {
+				pic cnn/dims/above={res 3 depth 0.2 to 4
 				text $3\times 32\times 32$
 			}
 		};
 
 		% Simple tail
 		\pic[tail, right=\groupsep of input-south east] (tail)  {
-				pic conv2d/dims={res 3 depth 0.2 to 4
-				text $3\times 32\times 32$
+			pic conv2d={res 3 depth 0.2}
+		};
+		\pic[tail, color=blue, right=\groupsep of input-south east] {
+				pic cnn/dims/below={res 3 depth 0.2 to -2
+				text tail
 			}
 		};
 
 		% Inception A
-		\pic[cnn, right=\groupsep+2*0.4cm of tail-south east] (A) {
-			pic conv2d/dims={res 3 depth 0.2 to 4 text Test this}
+		\pic[cnn, right=\groupsep+2*0.4cm of tail-south east] {
+			pic cnn/dims/above={res 3 depth 0.2 to 4 text Test this}
 		};
 		\pic[cnn,right=\groupsep of tail-south east, pic text=Inception A] (A) {
 			pic conv2d/repeat/decorate={res 3 depth 0.2 repeat 5 sep 0.2},
@@ -194,31 +201,38 @@ Compute the receptive field size at the input to the global average pooling laye
 
 		% Reduction A
 		\pic[pool, right=\groupsep of A-south east] (A2)  {
-			pic conv2d/dims={res 2 depth 0.4 to 4
+			pic conv2d={res 2 depth 0.4}
+		};
+		\pic[pool, right=\groupsep of A-south east]  {
+			pic cnn/dims/above={res 2 depth 0.4 to 4
 				text Reduction A
 			}
 		};
 
 		% Inception B
-		\pic[cnn, right=\groupsep+5*0.6cm of A2-south east] (B) {
-			pic conv2d/dims={res 2 depth 0.4 to 4
+		\pic[cnn, pic text=Inception B, right=\groupsep of A2-south east]
+		(B) {
+			pic conv2d/repeat/decorate={res 2 depth 0.4 repeat 10 sep 0.2}
+		};
+		\pic[cnn, right=\groupsep+5*0.6cm of A2-south east] {
+			pic cnn/dims/above={res 2 depth 0.4 to 4
 				text $10 \times 17 \times 17$
 			}
 		};
-		\pic[cnn, pic text=Inception B, right=\groupsep of A2-south east] (B) {
-			pic conv2d/repeat/decorate={res 2 depth 0.4 repeat 10 sep 0.2}
-		};
 
 		% Reduction B
-		\pic[pool, right=\groupsep of B-south east] (B2)  {
-				pic conv2d/dims={res 1 depth 0.6 to 4
+		\pic[pool, right=\groupsep of B-south east] (B2){
+			pic conv2d={res 1 depth 0.6}
+		};
+		\pic[pool, right=\groupsep of B-south east]   {
+				pic cnn/dims/above={res 1 depth 0.6 to 4
 				text Reduction B
 			}
 		};
 
 		% Inception C
-		\pic[cnn, right=\groupsep+2*0.8cm of B2-south east] (C) {
-			pic conv2d/dims={res 1 depth 0.6 to 4
+		\pic[cnn, right=\groupsep+2*0.8cm of B2-south east] {
+			pic cnn/dims/above={res 1 depth 0.6 to 4
 				text $30\times8\times8$
 			}
 		};
@@ -226,8 +240,20 @@ Compute the receptive field size at the input to the global average pooling laye
 			pic conv2d/repeat/decorate={res 1 depth 0.6 repeat 5 sep 0.2}
 		};
 
-		\draw[fill=red, shift={(C-south east)}] (\groupsep, 0)
-			rectangle ++(0.2, 3);
+		% Feature vector 1
+		\pic[cnn, right=\groupsep of C-south east] (D)  {
+				pic vec={res 3 depth 0.25}
+		};
+		\pic[cnn, right=\groupsep of C-south east]  {
+				pic cnn/dims/above={res 3 depth 0.25 to 4
+				text $30\times1\times1$
+			}
+		};
+		\pic[cnn, right=\groupsep of C-south east]  {
+				pic cnn/dims/below={res 3 depth 0.25 to -2
+				text Feature Vector
+			}
+		};
 
 	\end{tikzpicture}
 	}
@@ -512,14 +538,6 @@ Compute the receptive field size at the input to the global average pooling laye
 	\label{fig:red}
 	\caption{Modified Inception v4 reductions}
 \end{figure}
-
-
-
-
-
-
-
-
 
 
 \end{solution}

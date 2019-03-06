@@ -144,6 +144,26 @@
 	vector/.style={
 		rectangle
 	},
+	cnn/dims/.style={
+		at end,
+		right=0,
+		align=left,
+		rotate=45,
+		text width=3cm,
+		\tikzpictextoptions
+	},
+	cnn/dims/below/.style={
+		inherit cnn/dims/.style,
+		rotate=45,
+		left=0,
+		align=right
+	},
+	cnn/dims/above/.style={
+		inherit cnn/dims/.style,
+		rotate=45,
+		right=0,
+		align=left
+	},
 	pics/.cd,
 	pic conv2d/.style args={res #1 depth #2}{
 		/tikz/line width=0.3mm,
@@ -247,4 +267,71 @@
 				node[conv2d/dims/text] {#4};
 		}
 	},
+	pic vec/.style args={res #1 depth #2}{
+		/tikz/line width=0.3mm,
+		/tikz/node distance=0.5cm,
+		named scope code={
+			\def\resolution{#1}
+			\def\depth{#2}
+
+			% Draw the front flat rectangle
+			\filldraw (0,0,0)
+				rectangle ++(\depth, \resolution, 0);
+			% Draw the top 3d rectangle
+			\filldraw (0,\resolution, 0)
+				-- ++(0,0,-\depth)
+				-- ++(\depth,0,0)
+				-- ++(0,0,\depth);
+			% Draw the right 3d square
+			\filldraw (\depth,\resolution, 0)
+				-- ++(0,0,-\depth)
+				-- ++(0,-\resolution,0)
+				-- ++(0,0,\depth)
+				-- ++(0,\resolution,0);
+
+			% Draw anchor nodes
+			\path (0, 0, 0)
+				node[at end] (-south west) {}
+				-- ++(0, \resolution, 0)
+				node[at end] (-north west){}
+				-- ++(\depth, 0, 0)
+				node[at end] (-north east){}
+				-- ++(0, -\resolution, 0)
+				node[at end] (-south east){}
+				-- (0, 0, 0);
+		}
+	},
+	pic vec/dims/.style args={res #1 depth #2 to #3 text #4}{
+		inherit conv2d/.style,
+		named scope code={
+			% Draw repeat layer pic
+			\pic at (0, 0) {
+				pic vec={res #1 depth #2}
+			};
+
+			% Draw label
+			\path[draw, -] (#2*0.5, #1, -#2)
+				-- (#2*0.5, #3, -#2)
+				-- ++(0, 0, -1)
+				node[conv2d/dims/text] {#4};
+		}
+	},
+	pic cnn/dims/below/.style args={res #1 depth #2 to #3 text #4}{
+		named scope code={
+			% Draw label
+			\path[draw, -] (#2*0.5, 0, 0)
+				-- (#2*0.5, #3, 0)
+				-- ++(0, 0, 1)
+				node[cnn/dims/below] {#4};
+		}
+	},
+	pic cnn/dims/above/.style args={res #1 depth #2 to #3 text #4}{
+		named scope code={
+			% Draw label
+			\path[draw, -] (#2*0.5, #1, -#1)
+				-- (#2*0.5, #3, -#1)
+				-- ++(0, 0, -1)
+				node[cnn/dims/above] {#4};
+		}
+	}
 }

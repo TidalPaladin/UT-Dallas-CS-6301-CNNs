@@ -1,9 +1,9 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018/Arch Linux) (preloaded format=pdflatex 2019.2.22)  6 MAR 2019 13:56
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018/Arch Linux) (preloaded format=pdflatex 2019.3.4)  6 MAR 2019 17:15
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
-**/mnt/valak/documents/school/CS6301/Homework/hw6/hw6
-(/mnt/valak/documents/school/CS6301/Homework/hw6/hw6.tex
+**/home/tidal/Documents/CS6301/Homework/hw6/hw6
+(/home/tidal/Documents/CS6301/Homework/hw6/hw6.tex
 LaTeX2e <2018-12-01>
 (/usr/share/texmf-dist/tex/latex/base/article.cls
 Document Class: article 2018/09/03 v1.4i Standard LaTeX document class
@@ -27,7 +27,7 @@ Package: inputenc 2018/08/11 v1.3c Input encoding file
 \inpenc@prehook=\toks14
 \inpenc@posthook=\toks15
 )
-(/mnt/valak/documents/school/CS6301/Homework/hw6/jeffe.sty
+(/home/tidal/Documents/CS6301/Homework/hw6/jeffe.sty
 (/usr/share/texmf-dist/tex/latex/base/latexsym.sty
 Package: latexsym 1998/08/17 v2.2e Standard LaTeX package (lasy symbols)
 \symlasy=\mathgroup4
@@ -272,7 +272,7 @@ Package hyphsubst Info: Redefined: \l@english
 \timemm=\count111
 \mdYY=\count112
 )
-(/mnt/valak/documents/school/CS6301/Homework/hw6/handout.sty
+(/home/tidal/Documents/CS6301/Homework/hw6/handout.sty
 (/usr/share/texmf-dist/tex/latex/geometry/geometry.sty
 Package: geometry 2018/04/16 v5.8 Page Geometry
 \Gm@cnth=\count113
@@ -1647,7 +1647,7 @@ LaTeX Info: Thecontrolsequence`\]'isalreadyrobust on input line 129.
 \l_MT_above_shortintertext_sep=\dimen284
 \l_MT_below_shortintertext_sep=\dimen285
 )
-(/mnt/valak/documents/school/CS6301/Homework/hw6/cnn.sty
+(/home/tidal/Documents/CS6301/Homework/hw6/cnn.sty
 (/usr/share/texmf-dist/tex/latex/float/float.sty
 Package: float 2001/11/08 v1.3d Float enhancements (AL)
 \c@float@type=\count340
@@ -1708,7 +1708,7 @@ File: T1XCharter-TOsF.fd 2017/06/25 (autoinst) Font definitions for T1/XCharter
 LaTeX Font Info:    Font shape `T1/XCharter-TOsF/m/n' will be
 (Font)              scaled to size 9.60007pt on input line 28.
 
-(/mnt/valak/documents/school/CS6301/Homework/hw6/hw6.aux)
+(/home/tidal/Documents/CS6301/Homework/hw6/hw6.aux)
 \openout1 = `hw6.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 28.
@@ -1810,8 +1810,8 @@ LaTeX Info: Redefining \ref on input line 28.
 LaTeX Info: Redefining \pageref on input line 28.
 LaTeX Info: Redefining \nameref on input line 28.
 
-(/mnt/valak/documents/school/CS6301/Homework/hw6/hw6.out)
-(/mnt/valak/documents/school/CS6301/Homework/hw6/hw6.out)
+(/home/tidal/Documents/CS6301/Homework/hw6/hw6.out)
+(/home/tidal/Documents/CS6301/Homework/hw6/hw6.out)
 \@outlinefile=\write5
 \openout5 = `hw6.out'.
 
@@ -2031,84 +2031,83 @@ been already used, duplicate ignored
 l.145 \HomeworkHeader{6 (Design)}{7}
                                     % homework number, problem number [1]
 LaTeX Font Info:    Font shape `T1/fvs/m/n' will be
-(Font)              scaled to size 9.24173pt on input line 234.
+(Font)              scaled to size 9.24173pt on input line 260.
 Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             `fvs' (encoding: T1).
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
 LaTeX Font Info:    Font shape `T1/fvs/m/n' will be
-(Font)              scaled to size 7.59595pt on input line 234.
+(Font)              scaled to size 7.59595pt on input line 260.
 LaTeX Font Info:    Font shape `T1/fvs/b/n' will be
-(Font)              scaled to size 7.59595pt on input line 234.
+(Font)              scaled to size 7.59595pt on input line 260.
 LaTeX Font Info:    Font shape `T1/XCharter-TOsF/m/n' will be
-(Font)              scaled to size 8.64006pt on input line 341.
+(Font)              scaled to size 8.64006pt on input line 367.
 pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has 
 been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.385 
+l.411 
        [1pdfTeX warning (ext4): destination with the same identifier (name{figu
 re.1}) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.385 
+l.411 
       ]
 LaTeX Font Info:    Font shape `T1/XCharter-TOsF/b/n' will be
-(Font)              scaled to size 8.64006pt on input line 515.
+(Font)              scaled to size 8.64006pt on input line 541.
  [2pdfTeX warning (ext4): destination with the same identifier (name{figure.2})
  has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.515 
+l.541 
       pdfTeX warning (ext4): destination with the same identifier (name{figure.
 3}) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.515 
+l.541 
       ] [3pdfTeX warning (ext4): destination with the same identifier (name{fig
 ure.4}) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.529 \HomeworkHeader{6 (Design)}{8}
+l.547 \HomeworkHeader{6 (Design)}{8}
                                     % homework number, problem number]pdfTeX wa
 rning (ext4): destination with the same identifier (name{page.1}) has been alre
 ady used, duplicate ignored
 <to be read again> 
                    \relax 
-l.536 \HomeworkHeader{6 (Design)}{9}
+l.554 \HomeworkHeader{6 (Design)}{9}
                                     % homework number, problem number [1]pdfTeX
  warning (ext4): destination with the same identifier (name{page.1}) has been a
 lready used, duplicate ignored
 <to be read again> 
                    \relax 
-l.543 \end{document}
+l.561 \end{document}
                      [1]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 543.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 543.
-
-(/mnt/valak/documents/school/CS6301/Homework/hw6/hw6.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 543.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 543.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 561.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 561.
+ (/home/tidal/Documents/CS6301/Homework/hw6/hw6.aux)
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 561.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 561.
 Package rerunfilecheck Info: File `hw6.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
 
 
 LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 543.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 561.
  ) 
 Here is how much of TeX's memory you used:
- 46952 strings out of 492616
- 964643 string characters out of 6135177
- 1105921 words of memory out of 5000000
- 50140 multiletter control sequences out of 15000+600000
+ 46993 strings out of 492616
+ 965694 string characters out of 6135178
+ 1104617 words of memory out of 5000000
+ 50181 multiletter control sequences out of 15000+600000
  628125 words of font info for 134 fonts, out of 8000000 for 9000
  1156 hyphenation exceptions out of 8191
- 61i,16n,73p,1645b,1987s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 61i,16n,73p,1639b,1995s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texmf-dist/fonts/enc/dvips/base/8r.enc}{/usr/share/texmf-dist/fon
 ts/enc/dvips/ly1/texnansi.enc}{/usr/share/texmf-dist/fonts/enc/dvips/xcharter/x
 ch1_w7odti.enc}{/usr/share/texmf-dist/fonts/enc/dvips/xcharter/xch1_bwwzc2.enc}
@@ -2122,8 +2121,8 @@ st/fonts/type1/public/mathdesign/mdbch/md-chr7v.pfb></usr/share/texmf-dist/font
 s/type1/public/mathdesign/mdbch/md-chr7y.pfb></usr/share/texmf-dist/fonts/type1
 /public/mathdesign/mdbch/md-chri7m.pfb></usr/share/texmf-dist/fonts/type1/publi
 c/mathdesign/mdbch/md-chrma.pfb>
-Output written on /mnt/valak/documents/school/CS6301/Homework/hw6/hw6.pdf (11 p
-ages, 120226 bytes).
+Output written on /home/tidal/Documents/CS6301/Homework/hw6/hw6.pdf (11 pages, 
+120389 bytes).
 PDF statistics:
  120 PDF objects out of 1000 (max. 8388607)
  95 compressed objects within 1 object stream
