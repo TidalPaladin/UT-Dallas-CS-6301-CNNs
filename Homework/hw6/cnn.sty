@@ -333,5 +333,14 @@
 				-- ++(0, 0, -1)
 				node[cnn/dims/above] {#4};
 		}
+	},
+	pic cnn/dims/front/.style args={res #1 depth #2 to #3 text #4}{
+		named scope code={
+			% Draw label
+			\path[draw, -] (#2*0.5, #1, 0)
+				-- (#2*0.5, #3, 0)
+				-- ++(0, 0, -1)
+				node[cnn/dims/above] {#4};
+		}
 	}
 }

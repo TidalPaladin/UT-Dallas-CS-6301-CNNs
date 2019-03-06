@@ -158,6 +158,9 @@ Compute the receptive field size at the input to the global average pooling laye
 			cnn/.style={
 				fill=black!20
 			},
+			vec/.style={
+				fill=red!80
+			},
 			pool/.style={
 				fill=red!50
 			},
@@ -187,7 +190,7 @@ Compute the receptive field size at the input to the global average pooling laye
 		};
 		\pic[tail, color=blue, right=\groupsep of input-south east] {
 				pic cnn/dims/below={res 3 depth 0.2 to -2
-				text tail
+				text Tail
 			}
 		};
 
@@ -205,6 +208,11 @@ Compute the receptive field size at the input to the global average pooling laye
 		};
 		\pic[pool, right=\groupsep of A-south east]  {
 			pic cnn/dims/above={res 2 depth 0.4 to 4
+				text $1 \times 1 \times 1$
+			}
+		};
+		\pic[pool, right=\groupsep of A-south east]  {
+			pic cnn/dims/below={res 2 depth 0.4 to -2
 				text Reduction A
 			}
 		};
@@ -226,6 +234,11 @@ Compute the receptive field size at the input to the global average pooling laye
 		};
 		\pic[pool, right=\groupsep of B-south east]   {
 				pic cnn/dims/above={res 1 depth 0.6 to 4
+				text $1 \times 1 \times 1$
+			}
+		};
+		\pic[pool, right=\groupsep of B-south east]   {
+				pic cnn/dims/below={res 1 depth 0.6 to -2
 				text Reduction B
 			}
 		};
@@ -240,18 +253,33 @@ Compute the receptive field size at the input to the global average pooling laye
 			pic conv2d/repeat/decorate={res 1 depth 0.6 repeat 5 sep 0.2}
 		};
 
-		% Feature vector 1
-		\pic[cnn, right=\groupsep of C-south east] (D)  {
+		% Global avg
+		\pic[vec, right=\groupsep of C-south east] (avg)  {
 				pic vec={res 3 depth 0.25}
 		};
-		\pic[cnn, right=\groupsep of C-south east]  {
-				pic cnn/dims/above={res 3 depth 0.25 to 4
+		\pic[vec, right=\groupsep of C-south east]  {
+				pic cnn/dims/front={res 3 depth 0.25 to 4
 				text $30\times1\times1$
 			}
 		};
-		\pic[cnn, right=\groupsep of C-south east]  {
+		\pic[vec, right=\groupsep of C-south east]  {
 				pic cnn/dims/below={res 3 depth 0.25 to -2
-				text Feature Vector
+				text Global Avg
+			}
+		};
+
+		% Softmax
+		\pic[vec, right=\groupsep of avg-south east] (sm)  {
+				pic vec={res 3 depth 0.25}
+		};
+		\pic[vec, right=\groupsep of avg-south east]  {
+				pic cnn/dims/front={res 3 depth 0.25 to 4
+				text $30\times1\times1$
+			}
+		};
+		\pic[vec, right=\groupsep of avg-south east]  {
+				pic cnn/dims/below={res 3 depth 0.25 to -2
+				text Softmax
 			}
 		};
 

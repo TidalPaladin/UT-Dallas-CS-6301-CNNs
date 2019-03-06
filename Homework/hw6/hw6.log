@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018/Arch Linux) (preloaded format=pdflatex 2019.3.4)  6 MAR 2019 17:15
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018/Arch Linux) (preloaded format=pdflatex 2019.3.4)  6 MAR 2019 17:32
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -2031,83 +2031,79 @@ been already used, duplicate ignored
 l.145 \HomeworkHeader{6 (Design)}{7}
                                     % homework number, problem number [1]
 LaTeX Font Info:    Font shape `T1/fvs/m/n' will be
-(Font)              scaled to size 9.24173pt on input line 260.
+(Font)              scaled to size 9.24173pt on input line 288.
 Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             `fvs' (encoding: T1).
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
 LaTeX Font Info:    Font shape `T1/fvs/m/n' will be
-(Font)              scaled to size 7.59595pt on input line 260.
+(Font)              scaled to size 7.59595pt on input line 288.
 LaTeX Font Info:    Font shape `T1/fvs/b/n' will be
-(Font)              scaled to size 7.59595pt on input line 260.
+(Font)              scaled to size 7.59595pt on input line 288.
 LaTeX Font Info:    Font shape `T1/XCharter-TOsF/m/n' will be
-(Font)              scaled to size 8.64006pt on input line 367.
+(Font)              scaled to size 8.64006pt on input line 395.
 pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has 
 been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.411 
+l.439 
        [1pdfTeX warning (ext4): destination with the same identifier (name{figu
 re.1}) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.411 
+l.439 
       ]
 LaTeX Font Info:    Font shape `T1/XCharter-TOsF/b/n' will be
-(Font)              scaled to size 8.64006pt on input line 541.
+(Font)              scaled to size 8.64006pt on input line 569.
  [2pdfTeX warning (ext4): destination with the same identifier (name{figure.2})
  has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.541 
+l.569 
       pdfTeX warning (ext4): destination with the same identifier (name{figure.
 3}) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.541 
+l.569 
       ] [3pdfTeX warning (ext4): destination with the same identifier (name{fig
 ure.4}) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.547 \HomeworkHeader{6 (Design)}{8}
+l.575 \HomeworkHeader{6 (Design)}{8}
                                     % homework number, problem number]pdfTeX wa
 rning (ext4): destination with the same identifier (name{page.1}) has been alre
 ady used, duplicate ignored
 <to be read again> 
                    \relax 
-l.554 \HomeworkHeader{6 (Design)}{9}
+l.582 \HomeworkHeader{6 (Design)}{9}
                                     % homework number, problem number [1]pdfTeX
  warning (ext4): destination with the same identifier (name{page.1}) has been a
 lready used, duplicate ignored
 <to be read again> 
                    \relax 
-l.561 \end{document}
+l.589 \end{document}
                      [1]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 561.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 561.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 589.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 589.
  (/home/tidal/Documents/CS6301/Homework/hw6/hw6.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 561.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 561.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 589.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 589.
 Package rerunfilecheck Info: File `hw6.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
-
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 561.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 589.
  ) 
 Here is how much of TeX's memory you used:
- 46993 strings out of 492616
- 965694 string characters out of 6135178
- 1104617 words of memory out of 5000000
- 50181 multiletter control sequences out of 15000+600000
+ 47064 strings out of 492616
+ 967262 string characters out of 6135178
+ 1111759 words of memory out of 5000000
+ 50252 multiletter control sequences out of 15000+600000
  628125 words of font info for 134 fonts, out of 8000000 for 9000
  1156 hyphenation exceptions out of 8191
- 61i,16n,73p,1639b,1995s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 61i,16n,73p,1639b,1997s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texmf-dist/fonts/enc/dvips/base/8r.enc}{/usr/share/texmf-dist/fon
 ts/enc/dvips/ly1/texnansi.enc}{/usr/share/texmf-dist/fonts/enc/dvips/xcharter/x
 ch1_w7odti.enc}{/usr/share/texmf-dist/fonts/enc/dvips/xcharter/xch1_bwwzc2.enc}
@@ -2122,7 +2118,7 @@ s/type1/public/mathdesign/mdbch/md-chr7y.pfb></usr/share/texmf-dist/fonts/type1
 /public/mathdesign/mdbch/md-chri7m.pfb></usr/share/texmf-dist/fonts/type1/publi
 c/mathdesign/mdbch/md-chrma.pfb>
 Output written on /home/tidal/Documents/CS6301/Homework/hw6/hw6.pdf (11 pages, 
-120389 bytes).
+120674 bytes).
 PDF statistics:
  120 PDF objects out of 1000 (max. 8388607)
  95 compressed objects within 1 object stream
