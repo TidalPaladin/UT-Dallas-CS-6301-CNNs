@@ -11,18 +11,8 @@
 \usepackage{jeffe, handout,graphicx}
 \usepackage{forest}
 \usepackage{mathtools}
-\usepackage{tikz, ifthen, etoolbox}
-\usepackage{float}
-\usetikzlibrary{positioning}
-\newcommand{\pd}{\partial}
-\newcommand{\bs}{\boldsymbol}
-\newcommand{\ifstringequal}[4]{%
-  \ifnum\pdfstrcmp{#1}{#2}=0
-  #3%
-  \else
-  #4%
-  \fi
-}
+\usepackage{cnn}
+\usepackage{subfigure}
 
 
 % =========================================================
@@ -164,104 +154,374 @@ Compute the receptive field size at the input to the global average pooling laye
 \begin{figure}[H]
 	\noindent\resizebox{\textwidth}{!}{
 	\begin{tikzpicture}
-
-		% Define the macro.
-		% 1st argument: Height and width of the layer rectangle slice.
-		% 2nd argument: Depth of the layer slice
-		% 3rd argument: X Offset --> use it to offset layers from previously drawn layers.
-		% 4th argument: Options for filldraw.
-		% 5th argument: Text to be placed below this layer.
-		% 6th argument: Y Offset --> Use it when an output needs to be fed to
-		%	multiple layers that are on the same X offset.
-
-		\newcommand{\networkLayer}[6]{
-			\def\a{#1} % Used to distinguish input resolution for current layer.
-			\def\b{0.02}
-			\def\c{#2} % Width of the cube to distinguish number of input channels for current layer.
-			\def\t{#3} % X offset for current layer.
-			\def\d{#4} % Y offset for current layer.
-
-			% Draw the layer body.
-			\draw[line width=0.3mm](\c+\t,0,\d)
-				--(\c+\t,\a,\d)
-				--(\t,\a,\d);
-			\draw[line width=0.3mm](\t,0,\a+\d)
-				--(\c+\t,0,\a+\d) node[midway,below] {#6}
-				--(\c+\t,\a,\a+\d)
-				--(\t,\a,\a+\d)
-				--(\t,0,\a+\d);
-			\draw[line width=0.3mm](\c+\t,0,\d) -- (\c+\t,0,\a+\d);
-			\draw[line width=0.3mm](\c+\t,\a,\d) -- (\c+\t,\a,\a+\d);
-			\draw[line width=0.3mm](\t,\a,\d) -- (\t,\a,\a+\d);
-
-			% Recolor visible surfaces
-			\filldraw[#5] (\t+\b,\b,\a+\d)
-				--(\c+\t-\b,\b,\a+\d)
-				--(\c+\t-\b,\a-\b,\a+\d)
-				--(\t+\b,\a-\b,\a+\d)
-				--(\t+\b,\b,\a+\d); % front plane
-			\filldraw[#5] (\t+\b,\a,\a-\b+\d)
-				--(\c+\t-\b,\a,\a-\b+\d)
-				--(\c+\t-\b,\a,\b+\d)
-				--(\t+\b,\a,\b+\d);
-
-			% Colored slice.
-			\ifthenelse {\equal{#5} {}}
-			{} % Do not draw colored slice if #4 is blank.
-			{\filldraw[#5] (\c+\t,\b,\a-\b+\d) --
-				(\c+\t,\b,\b+\d) --
-				(\c+\t,\a-\b,\b+\d) --
-				(\c+\t,\a-\b,\a-\b+\d);
-			} % Else, draw a colored slice.
+		\tikzset{
+			cnn/.style={
+				fill=black!20
+			},
+			pool/.style={
+				fill=red!50
+			},
+			tail/.style={
+				fill=black!50
+			},
+			inp/.style={
+				fill=blue!80
+			}
 		}
+		\def\groupsep{0.4cm}
 
-		\newcommand{\repeatLayer}[8]{
-			% Repeat count
-			% Spacing
-		}
+		% Input
+		\pic[inp] (input) at (0,0,0) {
+				pic conv2d/dims={res 3 depth 0.2 to 4
+				text $3\times 32\times 32$
+			}
+		};
 
-		% INPUT
-		%\node[] (input image) at (-3.75,0.5) {\includegraphics[height=30mm]{lenna.png}};
-		\networkLayer{3.0}{0.5}{-2}{0.0}{color=gray!80}{
-			$3 \times 32 \times 32$
-		}
+		% Simple tail
+		\pic[tail, right=\groupsep of input-south east] (tail)  {
+				pic conv2d/dims={res 3 depth 0.2 to 4
+				text $3\times 32\times 32$
+			}
+		};
 
+		% Inception A
+		\pic[cnn, right=\groupsep+2*0.4cm of tail-south east] (A) {
+			pic conv2d/dims={res 3 depth 0.2 to 4 text Test this}
+		};
+		\pic[cnn,right=\groupsep of tail-south east, pic text=Inception A] (A) {
+			pic conv2d/repeat/decorate={res 3 depth 0.2 repeat 5 sep 0.2},
+		};
 
-		% ENCODER
-		\networkLayer{3.0}{0.1}{0.0}{0.0}{color=white}{Inc-A}    % S1
-		\foreach \i in {1,...,4}{
-			\networkLayer{3.0}{0.1}{\i*0.3}
-			{0.0}{color=white}{};
-		}
+		% Reduction A
+		\pic[pool, right=\groupsep of A-south east] (A2)  {
+			pic conv2d/dims={res 2 depth 0.4 to 4
+				text Reduction A
+			}
+		};
 
-		\networkLayer{2.5}{0.1}{1.5}{0.0}{color=red}{Red-A}    % S1
+		% Inception B
+		\pic[cnn, right=\groupsep+5*0.6cm of A2-south east] (B) {
+			pic conv2d/dims={res 2 depth 0.4 to 4
+				text $10 \times 17 \times 17$
+			}
+		};
+		\pic[cnn, pic text=Inception B, right=\groupsep of A2-south east] (B) {
+			pic conv2d/repeat/decorate={res 2 depth 0.4 repeat 10 sep 0.2}
+		};
 
-		\foreach \i in {0,...,9}{
-			\networkLayer{2.5}{0.2}{2.5+0.4*\i}{0.0}
-			{color=white}{}    % S1
-		}
-		\networkLayer{2.5}{0.2}{6.5}{0.0}{color=white}{Inc-B}    % S1
+		% Reduction B
+		\pic[pool, right=\groupsep of B-south east] (B2)  {
+				pic conv2d/dims={res 1 depth 0.6 to 4
+				text Reduction B
+			}
+		};
 
-		\networkLayer{2.5}{0.1}{7.5}{0.0}{color=red}{Red-B}    % S1
+		% Inception C
+		\pic[cnn, right=\groupsep+2*0.8cm of B2-south east] (C) {
+			pic conv2d/dims={res 1 depth 0.6 to 4
+				text $30\times8\times8$
+			}
+		};
+		\pic[cnn, pic text=Inception C, right=\groupsep of B2-south east] (C)  {
+			pic conv2d/repeat/decorate={res 1 depth 0.6 repeat 5 sep 0.2}
+		};
 
-		\foreach \i in {0,...,4}{
-			\networkLayer{2}{0.2}{8.5+0.4*\i}{0.0}
-			{color=white}{}    % S1
-		}
-		\networkLayer{2}{0.2}{10.9}{0.0}{color=white}{Inc-C}    % S1
-
-		\networkLayer{2}{0.1}{12}{0.0}{color=red}{Avg Pool}    % S1
-
-		% OUTPUT
-		\networkLayer{2}{0.05}{17}{0.0}{color=red!40}{}          % Pixelwise segmentation with classes.
-		%\node[] (output image) at (18,0.5) {\includegraphics[height=30mm]{vermeer.jpg}};
-
+		\draw[fill=red, shift={(C-south east)}] (\groupsep, 0)
+			rectangle ++(0.2, 3);
 
 	\end{tikzpicture}
 	}
 	\caption{Example CNN.}
 	\label{fig:cnn}
 \end{figure}
+
+\tikzset{
+	x=2cm, y=1.5cm,
+	every node/.style={
+		draw,
+		scale=0.8,
+		align=center,
+		fill=black!20,
+		inner sep=0.5em
+	},
+	conv/.style={
+		rectangle,
+		fill=red!20
+	},
+	nonlin/.style={
+		rectangle,
+		fill=red!20
+	},
+	plus/.style={
+		circle,
+		fill=blue!20,
+		inner sep=0.25em
+	},
+	line/.style={
+		->,
+		line width=0.4mm
+	}
+}
+
+\begin{figure}[H]
+	\centering
+	\subfigure[Resnet A]
+	{
+	\begin{tikzpicture}[x=2cm, y=1.25cm]
+		\tikzset{
+			every node/.style={
+				draw,
+				scale=0.8,
+				align=center,
+				fill=black!20,
+				inner sep=0.5em
+			},
+			conv/.style={
+				rectangle,
+				fill=red!20
+			},
+			nonlin/.style={
+				rectangle,
+				fill=red!20
+			},
+			plus/.style={
+				circle,
+				fill=blue!20,
+				inner sep=0.25em
+			},
+			line/.style={
+				->,
+				line width=0.4mm
+			}
+		}
+
+		\node[nonlin] (in) at (0.5, 0.5)
+			{Relu};
+		\node[nonlin] (out) at (0.5, 6)
+			{Relu};
+		\node[plus] (join) at (0.5, 5)
+			{+};
+
+		\node[conv] at (1, 3) (conv1)
+			{$32 \times 1 \times 1$\\ conv};
+
+		\node[conv] at (2, 2) (conv2-1)
+			{$32 \times 1 \times 1$\\ conv};
+		\node[conv] at (2, 3) (conv2-2)
+			{$32 \times 3 \times 3$\\ conv};
+
+		\node[conv] at (3, 2) (conv3-1)
+			{$32 \times 1 \times 1$\\ conv};
+		\node[conv] at (3, 3) (conv3-2)
+			{$48 \times 3 \times 3$\\ conv};
+		\node[conv] at (3, 4) (conv3-3)
+			{$64 \times 3 \times 3$\\ conv};
+
+		\node[conv] at (2, 5) (conv4)
+			{$348 \times 1 \times 1$\\ conv};
+
+		\draw[line] (in) -- (join);
+
+		\draw[line] (in) -- (conv1);
+		\draw[line] (in) -| (conv2-1);
+		\draw[line] (in) -| (conv3-1);
+
+		\draw[line] (conv2-1) -- (conv2-2);
+		\draw[line] (conv3-1) -- (conv3-2);
+		\draw[line] (conv3-2) -- (conv3-3);
+
+		\draw[line] (conv1) -- (conv4);
+		\draw[line] (conv2-2) -- (conv4);
+		\draw[line] (conv3-3) |- (conv4);
+
+		\draw[line] (conv4) -- (join);
+		\draw[line] (join) -- (out);
+
+	\end{tikzpicture}
+	}
+	\subfigure[Resnet B]
+	{
+	\begin{tikzpicture}[y=1.25cm]
+
+		\node[nonlin] (in) at (0.5, 0.5)
+			{Relu};
+		\node[nonlin] (out) at (0.5, 6)
+			{Relu};
+		\node[plus] (join) at (0.5, 5)
+			{+};
+
+		\node[conv] at (1.5, 3) (conv1)
+			{$32 \times 1 \times 1$\\ conv};
+
+		\node[conv] at (2.5, 2) (conv2-1)
+			{$32 \times 1 \times 1$\\ conv};
+		\node[conv] at (2.5, 3) (conv2-2)
+			{$48 \times 3 \times 3$\\ conv};
+		\node[conv] at (2.5, 4) (conv2-3)
+			{$64 \times 3 \times 3$\\ conv};
+
+		\node[conv] at (1.5, 5) (conv4)
+			{$348 \times 1 \times 1$\\ conv};
+
+		\draw[line] (in) -- (join);
+
+		\draw[line] (in) -- (conv1);
+		\draw[line] (in) -| (conv2-1);
+
+		\draw[line] (conv2-1) -- (conv2-2);
+		\draw[line] (conv2-2) -- (conv2-3);
+
+		\draw[line] (conv1) -- (conv4);
+		\draw[line] (conv2-3) |- (conv4);
+
+		\draw[line] (conv4) -- (join);
+		\draw[line] (join) -- (out);
+
+	\end{tikzpicture}
+	}
+	\label{fig:res-ab}
+	\caption{Modified Inception v4 resnets A/C}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+		\begin{tikzpicture}[y=1.25cm]
+
+		\node[nonlin] (in) at (0.5, 0.5)
+			{Relu};
+		\node[nonlin] (out) at (0.5, 6)
+			{Relu};
+		\node[plus] (join) at (0.5, 5)
+			{+};
+
+		\node[conv] at (1.5, 3) (conv1)
+			{$32 \times 1 \times 1$\\ conv};
+
+		\node[conv] at (2.5, 2) (conv2-1)
+			{$32 \times 1 \times 1$\\ conv};
+		\node[conv] at (2.5, 3) (conv2-2)
+			{$48 \times 3 \times 3$\\ conv};
+		\node[conv] at (2.5, 4) (conv2-3)
+			{$64 \times 3 \times 3$\\ conv};
+
+		\node[conv] at (1.5, 5) (conv4)
+			{$348 \times 1 \times 1$\\ conv};
+
+		\draw[line] (in) -- (join);
+
+		\draw[line] (in) -- (conv1);
+		\draw[line] (in) -| (conv2-1);
+
+		\draw[line] (conv2-1) -- (conv2-2);
+		\draw[line] (conv2-2) -- (conv2-3);
+
+		\draw[line] (conv1) -- (conv4);
+		\draw[line] (conv2-3) |- (conv4);
+
+		\draw[line] (conv4) -- (join);
+		\draw[line] (join) -- (out);
+
+	\end{tikzpicture}
+	\caption{Modified Inception v4 resnet C}
+	\label{fig:res-c}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\subfigure[Reduction A]
+	{
+	\begin{tikzpicture}
+
+		\node[nonlin] (in) at (0, 0)
+			{Filter Concat};
+		\node[nonlin] (out) at (0, 4)
+			{Filter Concat};
+
+		\node[conv] at (-1, 2) (conv1)
+			{$32 \times 1 \times 1$\\ conv};
+
+		\node[conv] at (0, 2) (conv2)
+			{$32 \times 1 \times 1$\\ conv};
+
+		\node[conv] at (1, 1) (conv3-1)
+			{$48 \times 3 \times 3$\\ conv};
+		\node[conv] at (1, 2) (conv3-2)
+			{$48 \times 3 \times 3$\\ conv};
+		\node[conv] at (1, 3) (conv3-3)
+			{$48 \times 3 \times 3$\\ conv};
+
+		\draw[line] (in) -| (conv1);
+		\draw[line] (in) -- (conv2);
+		\draw[line] (in) -- (conv3-1);
+
+		\draw[line] (conv3-1) -- (conv3-2);
+		\draw[line] (conv3-2) -- (conv3-3);
+
+		\draw[line] (conv1) -- (out);
+		\draw[line] (conv2) -- (out);
+		\draw[line] (conv3-3) -- (out);
+	\end{tikzpicture}
+	}
+	\subfigure[Reducation B]
+	{
+	\begin{tikzpicture}
+
+		\node[nonlin] (in) at (0, 0)
+			{Filter Concat};
+		\node[nonlin] (out) at (0, 4)
+			{Filter Concat};
+
+		\node[conv] at (-1.5, 2) (conv1)
+			{$32 \times 1 \times 1$\\ conv};
+
+		\node[conv] at (-0.5, 1) (conv2-1)
+			{$32 \times 1 \times 1$\\ conv};
+		\node[conv] at (-0.5, 2) (conv2-2)
+			{$32 \times 1 \times 1$\\ conv};
+
+		\node[conv] at (0.5, 1) (conv3-1)
+			{$32 \times 1 \times 1$\\ conv};
+		\node[conv] at (0.5, 2) (conv3-2)
+			{$32 \times 1 \times 1$\\ conv};
+
+		\node[conv] at (1.5, 1) (conv4-1)
+			{$48 \times 3 \times 3$\\ conv};
+		\node[conv] at (1.5, 2) (conv4-2)
+			{$48 \times 3 \times 3$\\ conv};
+		\node[conv] at (1.5, 3) (conv4-3)
+			{$48 \times 3 \times 3$\\ conv};
+
+		\draw[line] (in) -| (conv1);
+		\draw[line] (in) -- (conv2-1);
+		\draw[line] (in) -- (conv3-1);
+		\draw[line] (in) -| (conv4-1);
+
+		\draw[line] (conv2-1) -- (conv2-2);
+		\draw[line] (conv3-1) -- (conv3-2);
+
+		\draw[line] (conv4-1) -- (conv4-2);
+		\draw[line] (conv4-2) -- (conv4-3);
+
+		\draw[line] (conv1) -- (out);
+		\draw[line] (conv2-2) -- (out);
+		\draw[line] (conv3-2) -- (out);
+		\draw[line] (conv4-3) -- (out);
+
+	\end{tikzpicture}
+	}
+	\label{fig:red}
+	\caption{Modified Inception v4 reductions}
+\end{figure}
+
+
+
+
+
+
+
+
+
+
 \end{solution}
 \begin{proof}
 \end{proof}
@@ -279,4 +539,5 @@ Compute the receptive field size at the input to the global average pooling laye
 \end{solution}
 \begin{proof}
 \end{proof}
+
 \end{document}

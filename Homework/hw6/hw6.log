@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018/Arch Linux) (preloaded format=pdflatex 2019.2.22)  4 MAR 2019 22:46
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018/Arch Linux) (preloaded format=pdflatex 2019.2.22)  6 MAR 2019 13:56
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1647,6 +1647,7 @@ LaTeX Info: Thecontrolsequence`\]'isalreadyrobust on input line 129.
 \l_MT_above_shortintertext_sep=\dimen284
 \l_MT_below_shortintertext_sep=\dimen285
 )
+(/mnt/valak/documents/school/CS6301/Homework/hw6/cnn.sty
 (/usr/share/texmf-dist/tex/latex/float/float.sty
 Package: float 2001/11/08 v1.3d Float enhancements (AL)
 \c@float@type=\count340
@@ -1659,85 +1660,123 @@ Package: float 2001/11/08 v1.3d Float enhancements (AL)
 positioning.code.tex
 File: tikzlibrarypositioning.code.tex 2019/02/02 v3.1.1 (3.1.1)
 )
+(/usr/share/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrary
+decorations.pathreplacing.code.tex
+(/usr/share/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrary
+decorations.code.tex
+(/usr/share/texmf-dist/tex/generic/pgf/modules/pgfmoduledecorations.code.tex
+\pgfdecoratedcompleteddistance=\dimen286
+\pgfdecoratedremainingdistance=\dimen287
+\pgfdecoratedinputsegmentcompleteddistance=\dimen288
+\pgfdecoratedinputsegmentremainingdistance=\dimen289
+\pgf@decorate@distancetomove=\dimen290
+\pgf@decorate@repeatstate=\count341
+\pgfdecorationsegmentamplitude=\dimen291
+\pgfdecorationsegmentlength=\dimen292
+)
+\tikz@lib@dec@box=\box84
+)
+(/usr/share/texmf-dist/tex/generic/pgf/libraries/decorations/pgflibrarydecorati
+ons.pathreplacing.code.tex)))
+(/usr/share/texmf-dist/tex/latex/subfigure/subfigure.sty
+Package: subfigure 2002/03/15 v2.1.5 subfigure package
+\subfigtopskip=\skip63
+\subfigcapskip=\skip64
+\subfigcaptopadj=\dimen293
+\subfigbottomskip=\skip65
+\subfigcapmargin=\dimen294
+\subfiglabelskip=\skip66
+\c@subfigure=\count342
+\c@lofdepth=\count343
+\c@subtable=\count344
+\c@lotdepth=\count345
+
+****************************************
+* Local config file subfigure.cfg used *
+****************************************
+(/usr/share/texmf-dist/tex/latex/subfigure/subfigure.cfg)
+\subfig@top=\skip67
+\subfig@bottom=\skip68
+)
 LaTeX Font Info:    Try loading font information for T1+XCharter-TOsF on input 
-line 38.
+line 28.
 
 (/usr/share/texmf-dist/tex/latex/xcharter/T1XCharter-TOsF.fd
 File: T1XCharter-TOsF.fd 2017/06/25 (autoinst) Font definitions for T1/XCharter
 -TOsF.
 )
 LaTeX Font Info:    Font shape `T1/XCharter-TOsF/m/n' will be
-(Font)              scaled to size 9.60007pt on input line 38.
+(Font)              scaled to size 9.60007pt on input line 28.
 
 (/mnt/valak/documents/school/CS6301/Homework/hw6/hw6.aux)
 \openout1 = `hw6.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 38.
-LaTeX Font Info:    ... okay on input line 38.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 38.
-LaTeX Font Info:    ... okay on input line 38.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 38.
-LaTeX Font Info:    ... okay on input line 38.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 38.
-LaTeX Font Info:    ... okay on input line 38.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 38.
-LaTeX Font Info:    ... okay on input line 38.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 38.
-LaTeX Font Info:    ... okay on input line 38.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 38.
-LaTeX Font Info:    ... okay on input line 38.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 38.
-LaTeX Font Info:    ... okay on input line 38.
-LaTeX Font Info:    Checking defaults for MDA/cmr/m/n on input line 38.
-LaTeX Font Info:    Try loading font information for MDA+cmr on input line 38.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 28.
+LaTeX Font Info:    ... okay on input line 28.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 28.
+LaTeX Font Info:    ... okay on input line 28.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 28.
+LaTeX Font Info:    ... okay on input line 28.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 28.
+LaTeX Font Info:    ... okay on input line 28.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 28.
+LaTeX Font Info:    ... okay on input line 28.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 28.
+LaTeX Font Info:    ... okay on input line 28.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 28.
+LaTeX Font Info:    ... okay on input line 28.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 28.
+LaTeX Font Info:    ... okay on input line 28.
+LaTeX Font Info:    Checking defaults for MDA/cmr/m/n on input line 28.
+LaTeX Font Info:    Try loading font information for MDA+cmr on input line 28.
 
 (/usr/share/texmf-dist/tex/latex/mathdesign/mdacmr.fd
 File: mdacmr.fd 
 )
-LaTeX Font Info:    ... okay on input line 38.
-LaTeX Font Info:    Checking defaults for MDB/cmr/m/n on input line 38.
-LaTeX Font Info:    Try loading font information for MDB+cmr on input line 38.
+LaTeX Font Info:    ... okay on input line 28.
+LaTeX Font Info:    Checking defaults for MDB/cmr/m/n on input line 28.
+LaTeX Font Info:    Try loading font information for MDB+cmr on input line 28.
 
 (/usr/share/texmf-dist/tex/latex/mathdesign/mdbcmr.fd
 File: mdbcmr.fd 
 )
-LaTeX Font Info:    ... okay on input line 38.
-LaTeX Font Info:    Checking defaults for LY1/ptm/m/n on input line 38.
-LaTeX Font Info:    Try loading font information for LY1+ptm on input line 38.
+LaTeX Font Info:    ... okay on input line 28.
+LaTeX Font Info:    Checking defaults for LY1/ptm/m/n on input line 28.
+LaTeX Font Info:    Try loading font information for LY1+ptm on input line 28.
 
 (/usr/share/texmf-dist/tex/latex/ly1/ly1ptm.fd
 File: ly1ptm.fd 2001/02/01 font definitions for LY1/ptm using Berry names.
 )
-LaTeX Font Info:    ... okay on input line 38.
-LaTeX Font Info:    Checking defaults for T2A/cmr/m/n on input line 38.
-LaTeX Font Info:    Try loading font information for T2A+cmr on input line 38.
+LaTeX Font Info:    ... okay on input line 28.
+LaTeX Font Info:    Checking defaults for T2A/cmr/m/n on input line 28.
+LaTeX Font Info:    Try loading font information for T2A+cmr on input line 28.
 
 (/usr/share/texmf-dist/tex/latex/cyrillic/t2acmr.fd
 File: t2acmr.fd 2001/08/11 v1.0a Computer Modern Cyrillic font definitions
 )
-LaTeX Font Info:    ... okay on input line 38.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 38.
-LaTeX Font Info:    Try loading font information for TS1+cmr on input line 38.
+LaTeX Font Info:    ... okay on input line 28.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 28.
+LaTeX Font Info:    Try loading font information for TS1+cmr on input line 28.
 
 (/usr/share/texmf-dist/tex/latex/base/ts1cmr.fd
 File: ts1cmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
-LaTeX Font Info:    ... okay on input line 38.
+LaTeX Font Info:    ... okay on input line 28.
 LaTeX Font Info:    Font shape `T1/XCharter-TOsF/m/n' will be
-(Font)              scaled to size 10.51207pt on input line 38.
+(Font)              scaled to size 10.51207pt on input line 28.
 
 (/usr/share/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count341
-\scratchdimen=\dimen286
-\scratchbox=\box84
-\nofMPsegments=\count342
-\nofMParguments=\count343
+\scratchcounter=\count346
+\scratchdimen=\dimen295
+\scratchbox=\box85
+\nofMPsegments=\count347
+\nofMParguments=\count348
 \everyMPshowfont=\toks60
-\MPscratchCnt=\count344
-\MPscratchDim=\dimen287
-\MPnumerator=\count345
-\makeMPintoPDFobject=\count346
+\MPscratchCnt=\count349
+\MPscratchDim=\dimen296
+\MPnumerator=\count350
+\makeMPintoPDFobject=\count351
 \everyMPtoPDFconversion=\toks61
 ) (/usr/share/texmf-dist/tex/latex/oberdiek/epstopdf-base.sty
 Package: epstopdf-base 2016/05/15 v2.6 Base part for package epstopdf
@@ -1756,8 +1795,8 @@ G,.JBIG2,.JB2,.eps]
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
-\AtBeginShipoutBox=\box85
-Package hyperref Info: Link coloring ON on input line 38.
+\AtBeginShipoutBox=\box86
+Package hyperref Info: Link coloring ON on input line 28.
 
 (/usr/share/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2016/05/21 v2.44 Cross-referencing by name of section
@@ -1765,11 +1804,11 @@ Package: nameref 2016/05/21 v2.44 Cross-referencing by name of section
 (/usr/share/texmf-dist/tex/generic/oberdiek/gettitlestring.sty
 Package: gettitlestring 2016/05/16 v1.5 Cleanup title references (HO)
 )
-\c@section@level=\count347
+\c@section@level=\count352
 )
-LaTeX Info: Redefining \ref on input line 38.
-LaTeX Info: Redefining \pageref on input line 38.
-LaTeX Info: Redefining \nameref on input line 38.
+LaTeX Info: Redefining \ref on input line 28.
+LaTeX Info: Redefining \pageref on input line 28.
+LaTeX Info: Redefining \nameref on input line 28.
 
 (/mnt/valak/documents/school/CS6301/Homework/hw6/hw6.out)
 (/mnt/valak/documents/school/CS6301/Homework/hw6/hw6.out)
@@ -1813,15 +1852,15 @@ LaTeX Info: Redefining \nameref on input line 38.
 
 
 Package mathdesign/mdbch Warning: Package 'amssymb' shouldn't be used in conjon
-ction with package mdbch, on input line 38.
+ction with package mdbch, on input line 28.
 
 
 Package mathdesign/mdbch Warning: Package 'amsfonts' shouldn't be used in conjo
-nction with package mdbch, on input line 38.
+nction with package mdbch, on input line 28.
 
-\c@mv@tabular=\count348
-\c@mv@boldtabular=\count349
-LaTeX Info: Redefining \microtypecontext on input line 38.
+\c@mv@tabular=\count353
+\c@mv@boldtabular=\count354
+LaTeX Info: Redefining \microtypecontext on input line 28.
 Package microtype Info: Generating PDF output.
 Package microtype Info: Character protrusion enabled (level 2).
 Package microtype Info: Using default protrusion set `alltext'.
@@ -1837,55 +1876,55 @@ File: mt-bch.cfg 2007/03/03 v1.5 microtype config. file: Bitstream Charter (RS)
 )
 ABD: EveryShipout initializing macros
 LaTeX Font Info:    Font shape `T1/XCharter-TOsF/m/n' will be
-(Font)              scaled to size 11.52008pt on input line 39.
+(Font)              scaled to size 11.52008pt on input line 29.
 LaTeX Font Info:    Font shape `OT1/mdbch/m/n' will be
-(Font)              scaled to size 11.52008pt on input line 39.
+(Font)              scaled to size 11.52008pt on input line 29.
 LaTeX Font Info:    Font shape `OT1/mdbch/m/n' will be
-(Font)              scaled to size 7.68005pt on input line 39.
+(Font)              scaled to size 7.68005pt on input line 29.
 LaTeX Font Info:    Font shape `OT1/mdbch/m/n' will be
-(Font)              scaled to size 5.76004pt on input line 39.
-LaTeX Font Info:    Try loading font information for OML+mdbch on input line 39
+(Font)              scaled to size 5.76004pt on input line 29.
+LaTeX Font Info:    Try loading font information for OML+mdbch on input line 29
 .
 
 (/usr/share/texmf-dist/tex/latex/mathdesign/mdbch/omlmdbch.fd
 File: omlmdbch.fd 2013/08/29 Fontinst v1.933 font definitions for OML/mdbch.
 )
 LaTeX Font Info:    Font shape `OML/mdbch/m/it' will be
-(Font)              scaled to size 11.52008pt on input line 39.
+(Font)              scaled to size 11.52008pt on input line 29.
 LaTeX Font Info:    Font shape `OML/mdbch/m/it' will be
-(Font)              scaled to size 7.68005pt on input line 39.
+(Font)              scaled to size 7.68005pt on input line 29.
 LaTeX Font Info:    Font shape `OML/mdbch/m/it' will be
-(Font)              scaled to size 5.76004pt on input line 39.
-LaTeX Font Info:    Try loading font information for OMS+mdbch on input line 39
+(Font)              scaled to size 5.76004pt on input line 29.
+LaTeX Font Info:    Try loading font information for OMS+mdbch on input line 29
 .
 
 (/usr/share/texmf-dist/tex/latex/mathdesign/mdbch/omsmdbch.fd
 File: omsmdbch.fd 2013/08/29 Fontinst v1.933 font definitions for OMS/mdbch.
 )
 LaTeX Font Info:    Font shape `OMS/mdbch/m/n' will be
-(Font)              scaled to size 11.52008pt on input line 39.
+(Font)              scaled to size 11.52008pt on input line 29.
 LaTeX Font Info:    Font shape `OMS/mdbch/m/n' will be
-(Font)              scaled to size 7.68005pt on input line 39.
+(Font)              scaled to size 7.68005pt on input line 29.
 LaTeX Font Info:    Font shape `OMS/mdbch/m/n' will be
-(Font)              scaled to size 5.76004pt on input line 39.
-LaTeX Font Info:    Try loading font information for OMX+mdbch on input line 39
+(Font)              scaled to size 5.76004pt on input line 29.
+LaTeX Font Info:    Try loading font information for OMX+mdbch on input line 29
 .
 
 (/usr/share/texmf-dist/tex/latex/mathdesign/mdbch/omxmdbch.fd
 File: omxmdbch.fd 2013/08/29 Fontinst v1.933 font definitions for OMX/mdbch.
 )
 LaTeX Font Info:    Font shape `OMX/mdbch/m/n' will be
-(Font)              scaled to size 11.52008pt on input line 39.
+(Font)              scaled to size 11.52008pt on input line 29.
 LaTeX Font Info:    Font shape `OMX/mdbch/m/n' will be
-(Font)              scaled to size 7.68005pt on input line 39.
+(Font)              scaled to size 7.68005pt on input line 29.
 LaTeX Font Info:    Font shape `OMX/mdbch/m/n' will be
-(Font)              scaled to size 5.76004pt on input line 39.
-LaTeX Font Info:    Try loading font information for U+lasy on input line 39.
+(Font)              scaled to size 5.76004pt on input line 29.
+LaTeX Font Info:    Try loading font information for U+lasy on input line 29.
 
 (/usr/share/texmf-dist/tex/latex/base/ulasy.fd
 File: ulasy.fd 1998/08/17 v2.2e LaTeX symbol font definitions
 )
-LaTeX Font Info:    Try loading font information for U+msa on input line 39.
+LaTeX Font Info:    Try loading font information for U+msa on input line 29.
 
 (/usr/share/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
@@ -1893,7 +1932,7 @@ File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 (/usr/share/texmf-dist/tex/latex/microtype/mt-msa.cfg
 File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 39.
+LaTeX Font Info:    Try loading font information for U+msb on input line 29.
 
 (/usr/share/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
@@ -1901,55 +1940,55 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 (/usr/share/texmf-dist/tex/latex/microtype/mt-msb.cfg
 File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 )
-LaTeX Font Info:    Try loading font information for U+stmry on input line 39.
+LaTeX Font Info:    Try loading font information for U+stmry on input line 29.
 
 (/usr/share/texmf-dist/tex/latex/stmaryrd/Ustmry.fd)
 LaTeX Font Info:    Font shape `OML/mdbch/m/n' will be
-(Font)              scaled to size 11.52008pt on input line 39.
+(Font)              scaled to size 11.52008pt on input line 29.
 LaTeX Font Info:    Font shape `OML/mdbch/m/n' will be
-(Font)              scaled to size 7.68005pt on input line 39.
+(Font)              scaled to size 7.68005pt on input line 29.
 LaTeX Font Info:    Font shape `OML/mdbch/m/n' will be
-(Font)              scaled to size 5.76004pt on input line 39.
-LaTeX Font Info:    Try loading font information for MDA+mdbch on input line 39
+(Font)              scaled to size 5.76004pt on input line 29.
+LaTeX Font Info:    Try loading font information for MDA+mdbch on input line 29
 .
 
 (/usr/share/texmf-dist/tex/latex/mathdesign/mdbch/mdamdbch.fd
 File: mdamdbch.fd 2013/08/29 Fontinst v1.933 font definitions for MDA/mdbch.
 )
 LaTeX Font Info:    Font shape `MDA/mdbch/m/n' will be
-(Font)              scaled to size 11.52008pt on input line 39.
+(Font)              scaled to size 11.52008pt on input line 29.
 LaTeX Font Info:    Font shape `MDA/mdbch/m/n' will be
-(Font)              scaled to size 7.68005pt on input line 39.
+(Font)              scaled to size 7.68005pt on input line 29.
 LaTeX Font Info:    Font shape `MDA/mdbch/m/n' will be
-(Font)              scaled to size 5.76004pt on input line 39.
-LaTeX Font Info:    Try loading font information for MDB+mdbch on input line 39
+(Font)              scaled to size 5.76004pt on input line 29.
+LaTeX Font Info:    Try loading font information for MDB+mdbch on input line 29
 .
 
 (/usr/share/texmf-dist/tex/latex/mathdesign/mdbch/mdbmdbch.fd
 File: mdbmdbch.fd 2013/08/29 Fontinst v1.933 font definitions for MDB/mdbch.
 )
 LaTeX Font Info:    Font shape `MDB/mdbch/m/n' will be
-(Font)              scaled to size 11.52008pt on input line 39.
+(Font)              scaled to size 11.52008pt on input line 29.
 LaTeX Font Info:    Font shape `MDB/mdbch/m/n' will be
-(Font)              scaled to size 7.68005pt on input line 39.
+(Font)              scaled to size 7.68005pt on input line 29.
 LaTeX Font Info:    Font shape `MDB/mdbch/m/n' will be
-(Font)              scaled to size 5.76004pt on input line 39.
+(Font)              scaled to size 5.76004pt on input line 29.
 LaTeX Font Info:    Font shape `T1/XCharter-TOsF/b/n' will be
-(Font)              scaled to size 11.52008pt on input line 39.
+(Font)              scaled to size 11.52008pt on input line 29.
 LaTeX Font Info:    Font shape `T1/XCharter-TOsF/b/n' will be
-(Font)              scaled to size 10.51207pt on input line 43.
+(Font)              scaled to size 10.51207pt on input line 33.
 LaTeX Font Info:    Font shape `OML/mdbch/m/it' will be
-(Font)              scaled to size 10.51207pt on input line 43.
+(Font)              scaled to size 10.51207pt on input line 33.
 LaTeX Font Info:    Font shape `OMS/mdbch/m/n' will be
-(Font)              scaled to size 10.51207pt on input line 43.
+(Font)              scaled to size 10.51207pt on input line 33.
 LaTeX Font Info:    Font shape `OMX/mdbch/m/n' will be
-(Font)              scaled to size 10.51207pt on input line 43.
+(Font)              scaled to size 10.51207pt on input line 33.
 LaTeX Font Info:    Font shape `OML/mdbch/m/n' will be
-(Font)              scaled to size 10.51207pt on input line 43.
+(Font)              scaled to size 10.51207pt on input line 33.
 LaTeX Font Info:    Font shape `MDA/mdbch/m/n' will be
-(Font)              scaled to size 10.51207pt on input line 43.
+(Font)              scaled to size 10.51207pt on input line 33.
 LaTeX Font Info:    Font shape `MDB/mdbch/m/n' will be
-(Font)              scaled to size 10.51207pt on input line 43.
+(Font)              scaled to size 10.51207pt on input line 33.
  [1
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]pdfTeX warning (ext4): dest
@@ -1957,31 +1996,31 @@ ination with the same identifier (name{page.1}) has been already used, duplicat
 e ignored
 <to be read again> 
                    \relax 
-l.55 \HomeworkHeader{6 (Design)}{3}
+l.45 \HomeworkHeader{6 (Design)}{3}
                                    % homework number, problem number [1]pdfTeX 
 warning (ext4): destination with the same identifier (name{page.1}) has been al
 ready used, duplicate ignored
 <to be read again> 
                    \relax 
-l.63 \HomeworkHeader{6 (Design)}{4}
+l.53 \HomeworkHeader{6 (Design)}{4}
                                    % homework number, problem number [1]pdfTeX 
 warning (ext4): destination with the same identifier (name{page.1}) has been al
 ready used, duplicate ignored
 <to be read again> 
                    \relax 
-l.71 \HomeworkHeader{6 (Design)}{5}
+l.61 \HomeworkHeader{6 (Design)}{5}
                                    % homework number, problem number [1]
 LaTeX Font Info:    Font shape `T1/XCharter-TOsF/m/n' will be
-(Font)              scaled to size 7.68005pt on input line 96.
+(Font)              scaled to size 7.68005pt on input line 86.
 LaTeX Font Info:    Font shape `T1/XCharter-TOsF/m/n' will be
-(Font)              scaled to size 5.76004pt on input line 96.
+(Font)              scaled to size 5.76004pt on input line 86.
 pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has 
 been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.100 \HomeworkHeader{6 (Design)}{6}
-                                    % homework number, problem number [1]
-Underfull \hbox (badness 10000) in paragraph at lines 141--148
+l.90 \HomeworkHeader{6 (Design)}{6}
+                                   % homework number, problem number [1]
+Underfull \hbox (badness 10000) in paragraph at lines 131--138
 
  []
 
@@ -1989,70 +2028,87 @@ pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has
 been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.155 \HomeworkHeader{6 (Design)}{7}
+l.145 \HomeworkHeader{6 (Design)}{7}
                                     % homework number, problem number [1]
-Missing character: There is no ; in font nullfont!
-Missing character: There is no ; in font nullfont!
-Missing character: There is no ; in font nullfont!
-Missing character: There is no ; in font nullfont!
-
-Underfull \hbox (badness 10000) in paragraph at lines 165--262
-[]
- []
-
 LaTeX Font Info:    Font shape `T1/fvs/m/n' will be
-(Font)              scaled to size 9.24173pt on input line 262.
+(Font)              scaled to size 9.24173pt on input line 234.
 Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             `fvs' (encoding: T1).
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
 LaTeX Font Info:    Font shape `T1/fvs/m/n' will be
-(Font)              scaled to size 7.59595pt on input line 262.
+(Font)              scaled to size 7.59595pt on input line 234.
 LaTeX Font Info:    Font shape `T1/fvs/b/n' will be
-(Font)              scaled to size 7.59595pt on input line 262.
+(Font)              scaled to size 7.59595pt on input line 234.
+LaTeX Font Info:    Font shape `T1/XCharter-TOsF/m/n' will be
+(Font)              scaled to size 8.64006pt on input line 341.
 pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has 
 been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.269 \HomeworkHeader{6 (Design)}{8}
-                                    % homework number, problem number [1pdfTeX 
-warning (ext4): destination with the same identifier (name{figure.1}) has been 
-already used, duplicate ignored
+l.385 
+       [1pdfTeX warning (ext4): destination with the same identifier (name{figu
+re.1}) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.269 \HomeworkHeader{6 (Design)}{8}
+l.385 
+      ]
+LaTeX Font Info:    Font shape `T1/XCharter-TOsF/b/n' will be
+(Font)              scaled to size 8.64006pt on input line 515.
+ [2pdfTeX warning (ext4): destination with the same identifier (name{figure.2})
+ has been already used, duplicate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.515 
+      pdfTeX warning (ext4): destination with the same identifier (name{figure.
+3}) has been already used, duplicate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.515 
+      ] [3pdfTeX warning (ext4): destination with the same identifier (name{fig
+ure.4}) has been already used, duplicate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.529 \HomeworkHeader{6 (Design)}{8}
                                     % homework number, problem number]pdfTeX wa
 rning (ext4): destination with the same identifier (name{page.1}) has been alre
 ady used, duplicate ignored
 <to be read again> 
                    \relax 
-l.276 \HomeworkHeader{6 (Design)}{9}
+l.536 \HomeworkHeader{6 (Design)}{9}
                                     % homework number, problem number [1]pdfTeX
  warning (ext4): destination with the same identifier (name{page.1}) has been a
 lready used, duplicate ignored
 <to be read again> 
                    \relax 
-l.282 \end{document}
+l.543 \end{document}
                      [1]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 282.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 282.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 543.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 543.
 
 (/mnt/valak/documents/school/CS6301/Homework/hw6/hw6.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 282.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 282.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 543.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 543.
 Package rerunfilecheck Info: File `hw6.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 282.
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 543.
  ) 
 Here is how much of TeX's memory you used:
- 45053 strings out of 492616
- 919399 string characters out of 6135177
- 1019158 words of memory out of 5000000
- 48282 multiletter control sequences out of 15000+600000
- 615080 words of font info for 126 fonts, out of 8000000 for 9000
+ 46952 strings out of 492616
+ 964643 string characters out of 6135177
+ 1105921 words of memory out of 5000000
+ 50140 multiletter control sequences out of 15000+600000
+ 628125 words of font info for 134 fonts, out of 8000000 for 9000
  1156 hyphenation exceptions out of 8191
- 61i,15n,69p,1645b,905s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 61i,16n,73p,1645b,1987s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texmf-dist/fonts/enc/dvips/base/8r.enc}{/usr/share/texmf-dist/fon
 ts/enc/dvips/ly1/texnansi.enc}{/usr/share/texmf-dist/fonts/enc/dvips/xcharter/x
 ch1_w7odti.enc}{/usr/share/texmf-dist/fonts/enc/dvips/xcharter/xch1_bwwzc2.enc}
@@ -2066,11 +2122,11 @@ st/fonts/type1/public/mathdesign/mdbch/md-chr7v.pfb></usr/share/texmf-dist/font
 s/type1/public/mathdesign/mdbch/md-chr7y.pfb></usr/share/texmf-dist/fonts/type1
 /public/mathdesign/mdbch/md-chri7m.pfb></usr/share/texmf-dist/fonts/type1/publi
 c/mathdesign/mdbch/md-chrma.pfb>
-Output written on /mnt/valak/documents/school/CS6301/Homework/hw6/hw6.pdf (9 pa
-ges, 113301 bytes).
+Output written on /mnt/valak/documents/school/CS6301/Homework/hw6/hw6.pdf (11 p
+ages, 120226 bytes).
 PDF statistics:
- 104 PDF objects out of 1000 (max. 8388607)
- 81 compressed objects within 1 object stream
- 13 named destinations out of 1000 (max. 500000)
- 18957 words of extra memory for PDF output out of 20736 (max. 10000000)
+ 120 PDF objects out of 1000 (max. 8388607)
+ 95 compressed objects within 1 object stream
+ 22 named destinations out of 1000 (max. 500000)
+ 23565 words of extra memory for PDF output out of 24883 (max. 10000000)
 
