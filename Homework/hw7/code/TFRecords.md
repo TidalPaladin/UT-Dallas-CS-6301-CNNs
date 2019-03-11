@@ -182,6 +182,7 @@ with shard_graph.as_default():
             horizontal_flip=True,
             data_format='channels_first',
             rescale=1./255)
+
 ```
 
 We next create a wrapper function for `flow_from_directory`. As stated
@@ -239,38 +240,52 @@ with shard_graph.as_default():
 ### Writing `.tfrecord` Files
 
 Finally, we can produce `.tfrecord` files for our `Dataset`.
+Tensorflow provides some nice high level APIs to handle writing
+TFRecords given a dataset. Writingn the TFRecords will consist of
+the following steps
 
-THIS JUST BUILDS THE GRAPH, NOTHING RUNS YET
+ 1. Use `Dataset.shard()` to create a dataset with 1/`num_shards`
+ elements
+ 2. Use `tf.serialize_tensor()` to serialize the input and label
+ tensors for each training example in the shard
+ 3. Concatenate the string contents of these two serialized tensors
+ into a single string tensor
+ 4. Write the resulting tensor to a `.tfrecord` file.
+
+**Note** the code below only builds a graph representing the flow
+of operations from the raw training set to the shard files. The graph
+must be run later
 
 ```python
 
-with shard_graph.as_default():
-    for current_shard in range(0,TFRECORD.num_shards):
-        filepath = TFRECORD.file_format % current_shard
-        clear_output(wait=True)
-        #print('Processing shard %i / %i' % (current_shard+1, TFRECORD.num_shards))
-        #print('Path: %s' % filepath)
+def serialize_tensor_tuple(img, label):
+    """Serializes input/label tensors"""
+    img_s = tf.serialize_tensor(img)
+    label_s = tf.serialize_tensor(label)
+    return tf.string_join([img_s, label_s])
 
+with shard_graph.as_default():
+
+    # Iterate over shard indices
+    for current_shard in range(0,TFRECORD.num_shards):
+
+        # Open a writer object to the target shard file
+        filepath = TFRECORD.file_format % current_shard
         writer = TFRecordWriter(filepath)
 
-        # Create a Dataset with 1/num_shards elements
+        # Pull 1/num_shards items from the dataset
         shard = ds_train.shard(TFRECORD.num_shards, current_shard)
 
-        # New way, wouldn't work with my tensorflow (no filter_for_shard)
-        # shard_func = filter_for_shard(current_shard, TFRECORD.num_shards)
-        # shard = ds_train.apply(shard_func)
-
-        def serialize_tensor_tuple(img, label):
-            # Serialize two separate tensors
-            img_s = tf.serialize_tensor(img)
-            label_s = tf.serialize_tensor(label)
-            return tf.string_join([img_s, label_s])
-
+        # Map serialization over training examples in the shard
         shard = shard.map(serialize_tensor_tuple)
+
+        # Write the serialized tensor to the shard file
         writer.write(shard)
 ```
 
 ```python
+        #print('Processing shard %i / %i' % (current_shard+1, TFRECORD.num_shards))
+        #print('Path: %s' % filepath)
 
 ```
 
