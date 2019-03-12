@@ -139,7 +139,7 @@ TRAIN = Constants(TRAIN)
 
 # Shard generation parameters
 TFRECORD = {
-    'file_format' : os.path.join(DIRS.tfrecord, 'tin_train_%i.tfrecord'),
+    'file_format' : os.path.join(DIRS.tfrecord, 'tin_train_{}.tfrecord'),
     'train_glob' : os.path.join(DIRS.tfrecord, '.*_train_.*tfrecord'),
     'val_glob' : os.path.join(DIRS.tfrecord, '.*_val_.*tfrecord'),
     'num_shards' : 30
@@ -229,12 +229,9 @@ as expected (with batching on the first dimension).
 ```python
 with shard_graph.as_default():
     output_types = inputs.dtype, labels.dtype
-    output_shapes = inputs.shape, labels.shape
     ds_train = tf.data.Dataset.from_generator(
             generator,
-            output_types=output_types,
-            output_shapes=output_shapes)
-    ds_train
+            output_types=output_types)
 ```
 
 ### Writing `.tfrecord` Files
@@ -258,32 +255,41 @@ must be run later
 
 ```python
 
-def serialize_tensor_tuple(img, label):
-    """Serializes input/label tensors"""
-    img_s = tf.serialize_tensor(img)
-    label_s = tf.serialize_tensor(label)
-    return tf.string_join([img_s, label_s])
 
 with shard_graph.as_default():
+    def serialize_tensor_tuple(img, label):
+        """Serializes input/label tensors"""
+        #img = tf.squeeze(img, axis=0)
+        #label = tf.squeeze(label, axis=0)
+        img_s = tf.serialize_tensor(img)
+        label_s = tf.serialize_tensor(label)
+        return tf.string_join([img_s, label_s])
 
-    # Iterate over shard indices
-    for current_shard in range(0,TFRECORD.num_shards):
-
-        # Open a writer object to the target shard file
-        filepath = TFRECORD.file_format % current_shard
-        writer = TFRecordWriter(filepath)
-
-        # Pull 1/num_shards items from the dataset
-        shard = ds_train.shard(TFRECORD.num_shards, current_shard)
-
-        # Map serialization over training examples in the shard
-        shard = shard.map(serialize_tensor_tuple)
-
-        # Write the serialized tensor to the shard file
+    def write_shard(num):
+        filename = tf.strings.format(TFRECORD.file_format, num)
+        shard = serialized.shard(TFRECORD.num_shards, num)
+        writer = TFRecordWriter(filename)
         writer.write(shard)
+        #with tf.control_dependencies([writer.write(shard)]):
+        return tf.strings.format(TFRECORD.file_format, num)
+
+
+    # Serialize training examples to binary strings
+    serialized = ds_train.map(
+            serialize_tensor_tuple, 
+            num_parallel_calls=8)
+
+    # Tensor over range of shards
+    shard_index = tf.range(TFRECORD.num_shards, dtype=tf.int64)
+    out = tf.map_fn(write_shard, shard_index, dtype=tf.string)
 ```
 
 ```python
+with shard_graph.as_default():
+    with tf.Session().as_default():
+        #shard_session.run(shard_files)
+        x = out.eval()
+
         #print('Processing shard %i / %i' % (current_shard+1, TFRECORD.num_shards))
         #print('Path: %s' % filepath)
 
