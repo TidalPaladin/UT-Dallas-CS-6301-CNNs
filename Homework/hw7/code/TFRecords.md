@@ -21,10 +21,6 @@ jupyter:
 
 We have a residual layer with the following reverse graph
 
-```python
-%load_ext tikzmagic
-```
-
 To calculate $\frac{\partial e}{\partial x}$ we will need
 to apply the chain rule through $f(x)$ and sum on the
 residual merge. This gives
@@ -35,341 +31,366 @@ $$
     \cdot
     \frac{\partial e}{\partial y} 
 $$
-## 27 <a name="27"></a>
+## 27 
 
-## 28 <a name="28"></a>
+We apply the operator $\partial/\partial x$ across $\boldsymbol{e}$
 
-# Problem 3 <a name="p3"></a>
+$$
+\begin{aligned}
+\frac{\partial e}{\partial h-h_0} &= 
+    \frac{\partial e(h)}{\partial h-h_0}
+    +
+    \frac{\partial (h-h_0)^T g}{\partial h-h_0}
+    +
+    0.5\frac{\partial (h-h_0)^T A (h-h_0)}{\partial h-h_0}
+\\
+&=0 + g + A(h-h_0)
+\end{aligned}
+$$
+
+Then optimizing with this expression gives
+
+$$
+\begin{aligned}
+0 + g + A(h-h_0) &= 0 \\
+A(h-h_0) &= -g \\
+h-h_0 &= -gA^{-1}
+\end{aligned}
+$$
+
+## 28 
+
+This one got me on the test, as I applied the chain rule to the optimized
+$h-h_0$ found above rather than the gradient. It is more straightforward to
+differentiate with respect to $\alpha$, giving
+
+$$
+\begin{aligned}
+\frac{\partial e(h)}{\partial \alpha}
+&=
+0 - g^Tg + \alpha g^T A g
+\end{aligned}
+$$
+
+Which we optimize as
+
+$$
+\begin{aligned}
+- g^Tg + \alpha g^T A g &= 0 \\
+g^Tg = \alpha g^T A g \\
+\alpha = \frac{g^Tg}{g^T A g} \\
+\end{aligned}
+$$
+
+# Training
+
+I could not find a logical way to divide the document where each problem
+was encapsulated separately, but I have done my best to answer the given questions in the order that the occur during network design.
+
 The Tiny ImageNet dataset can be downloaded 
 [here](http://cs231n.stanford.edu/tiny-imagenet-200.zip)
 Extract the zip onto a fast disk drive. First we will set up the
-python environment and imports
+python environment and imports, along with model flags.
 
 ```python
 import numpy as np
+from matplotlib import pyplot as plt
 import tensorflow as tf
-from tensorflow import keras
-from tensorflow.keras import layers
+from tf import keras
+from tf.keras import layers
 import os
 import re
 from IPython.display import clear_output
 
-from tensorflow.keras.callbacks import ModelCheckpoint, ProgbarLogger
-from tensorflow.losses import sparse_softmax_cross_entropy as softmax_xent
-from tensorflow.data import TFRecordDataset
-from tensorflow.data.experimental import TFRecordWriter
-#from tensorflow.data.experimental import naive_shard
+from tf.keras.callbacks import ModelCheckpoint, ProgbarLogger
+from tf.losses import sparse_softmax_cross_entropy as softmax_xent
+from tf.data import TFRecordDataset
+from tf.data.experimental import TFRecordWriter
+from tf.keras.preprocessing.image import ImageDataGenerator
 
 # For TFRecord demo
 tf.logging.set_verbosity(tf.logging.INFO)
-#tf.enable_eager_execution()
 
-# Train on secondary GPU
+# Only expose secondary GPU
+# Prevents desktop sluggishness
 os.environ['CUDA_VISIBLE_DEVICES'] = '1'
-
-```
-
-Looking at the directory
-structure of the dataset, we see that there are subdirectory for
-training, validating, and testing. The training set contains
-200 classes where images of a class are grouped by directory.
-
-
-
-
-## Preprocessing <a name="introduction"></a>
-
-We can import the training set with preprocessing as follows
-(documentation available 
-[here](https://keras.io/preprocessing/image/).)
-
-We will use the `ImageDataGenerator`. This works will on the
-training set by default
-
-```python
 
 class Constants(object):
     def __init__(self, d):
         self.__dict__ = d
 
 # Constants for important filepaths
-DATASET_ROOT = '/home/tidal/tiny-imagenet-200/tiny-imagenet-200'
-DIRS = {
-    'root' : '/',
-    'tfrecord' :  'tfrecords',
-    'train' : 'train',
-    'test' :  'test',
-    'val' : 'val',
-    'checkpoint' : 'checkpoints'
-}
-DIRS = { k : os.path.join(DATASET_ROOT, v) for k, v in DIRS.items() }
-DIRS = Constants(DIRS)
-
-# Input shape, batching, and data type
-inputs = tf.keras.layers.Input(
-    shape=[3, 64, 64],
-    name='input',
-    dtype=tf.float32
-)
-
-# Ground truth sparse labels
-labels = tf.placeholder(
-    dtype=tf.int32,
-    shape=[None, 1],
-    name='label'
-)
-
-# Training parameters
-TRAIN = {
+DATASET_ROOT = '/home/tidal/tiny-imagenet-200'
+FLAGS = {
+    # Dataset / Sharding
+    'train_dir' : 'train',
+    'tfrecord_fmt' : 'tfrecords/tin_{}.tfrecord',
     'num_classes' : 200,
+    'num_shards' : 10,
+    'shard_size' : 10000,
+    'num_train' : 100000,
+    'input_shape' : (64, 64, 3),
+    'data_format' : 'channels_last',
+    'class_mode' : 'sparse',
+    'compression' : 'GZIP',
+
+    # Preprocessing args for ImageDataGenerator
+    'preprocess' : {
+        'samplewise_center' : True,
+        'samplewise_std_normalization' : True,
+        'horizontal_flip' : True,
+        'rescale' : 1./255
+    },
+
+    # Model
+    'width' : 64,
+
+    # Training
     'batch_size' : 128,
-    'shuffle' : 5000,
     'num_epochs' : 72,
+    'shuffle' : 5000,
     'momentum' : 0.9,
     'regularizer_scale' : 0.1,
     'lr_initial' : 0.01,
     'lr_scale' : 0.1,
     'lr_epoch' : 64,
-    'val_split' : 0.2,
+    'val_size' : 5000,
     'lr_staircase' : True,
+
+    # Checkpoint
     'max_checkpoint' : 5,
-    'checkpoint_fmt' : 'resnet_{epoch:02d}.hdf5'
+    'chkpt_fmt' : 'checkpoints/resnet_{epoch:02d}'
 }
-TRAIN = Constants(TRAIN)
 
-# Shard generation parameters
-TFRECORD = {
-    'file_format' : os.path.join(DIRS.tfrecord, 'tin_train_{}.tfrecord'),
-    'train_glob' : os.path.join(DIRS.tfrecord, '.*_train_.*tfrecord'),
-    'val_glob' : os.path.join(DIRS.tfrecord, '.*_val_.*tfrecord'),
-    'num_shards' : 30
-}
-TFRECORD = Constants(TFRECORD)
+# Append full paths
+for path in ['train_dir', 'tfrecord_fmt', 'chkpt_fmt']:
+    base = FLAGS[path]
+    FLAGS[path] = os.path.join(DATASET_ROOT, base)
 
-CONST = Constants({'train' : TRAIN, 'tfrecord' : TFRECORD, 'dirs' : DIRS})
+# Allow for FLAGS.x indexing
+FLAGS = Constants(FLAGS)
+
+# Input shape, batching, and data type
+inputs = tf.keras.layers.Input(
+    shape=FLAGS.input_shape,
+    name='input',
+    dtype=tf.float32
+)
+
+# Ground truth sparse label placeholder
+labels = tf.placeholder(
+    dtype=tf.int32,
+    shape=[None],
+    name='label'
+)
 ```
 
-### Importing to a `Dataset`
+## Importing the Dataset
 
-Now that we have defined constants, we can begin reading training data in
-preparation for writing sharded `TFRecord` files. Keras provides the
-`ImageDataGenerator` which accepts formatting and preprocessing information
-as arguments and returns an `ImageDataGenerator` object. One method of this
-returned object is the `flow_from_directory` method which automatically
-interprets the file structure of the training set and returns an iterator
-over training files.
+Looking at the directory
+structure of the dataset, we see that there are subdirectory for
+training, validating, and testing. The training set contains
+200 classes where images of a class are grouped by directory.
 
-First we create the `ImageDataGenerator`. We will use the following args
+We can import the training set with preprocessing as follows
+(documentation available 
+[here](https://keras.io/preprocessing/image/).)
+
+We will use the `ImageDataGenerator`. This works well on the
+training set by default, and will automate nearly all of the
+import process. First a generator is constructed as follows
+
+```python
+train_datagen = ImageDataGenerator(
+        data_format=FLAGS.data_format,
+        **FLAGS.preprocess)
+
+```
+
+where the arguments (some found in `FLAGS.preprocess) are
  * `samplewise_center=True` - Normalize to zero mean
  * `samplewise_std_normalization=True` - Normalize to unit variance
  * `horizontal_flip=True` - Flip images
  * `data_format=True` - Generator should yield images with channels on axis 0
  * `rescale=1./255` - Rescale 8 bit images to a float on [0, 1]
 
+The constructor also allows one to specify a custom preprocessing function to run after the above operations. However, it is worth noting that these arithmetic operations will result in floating point outputs. Unless we are willing to tolerate a loss of precision by rounding these floats back to bytes, we will see a noticable growth in the size of our `.tfrecord` files. 
+This also has implications for memory movement, as we are now moving around additional floating point values.
+
+An alternative is to apply these preprocessing operations as the `.tfrecord` file is read, at which point computational cost is traded for memory and storage efficiency.
+
+Next we use the `flow_from_directory` method which automatically
+interprets the file structure of the training set and returns an iterator
+over training files. Our preprocessing operations will be applied as files are pulled from this iterator as tuples of image label pairs. The arguments are mostly trivial. We specify a `class_mode='sparse'` such that an argmax integer is produced for labels, rather than a one hot vector. The batch size specified here is distinct from the one used in training and may be tuned separately.
+
+For other class modes, be sure to choose a loss function accordingly. Using categorical labels with sparse loss functions will produce cryptic errors about type and length. 
+
+```python
+train_generator = train_datagen.flow_from_directory(
+        FLAGS.train_dir,
+        target_size=FLAGS.input_shape[:2],
+        batch_size=FLAGS.shard_size,
+        class_mode=FLAGS.class_mode)
+train_generator
+```
+
+When we invoke `train_generator` we see output on the properties of the scanned dataset.
+
 **Note** that no shuffling was used - according to the documentation,
 shuffling should be done after any sharding operations.
 
-```python
-# Define a seprate graph to handle TFRecord writing
-shard_graph = tf.Graph()
-
-# Define a data generator with preprocessing 
-# Includes a ratio to reserve for validation
-with shard_graph.as_default():
-    train_datagen = tf.keras.preprocessing.image.ImageDataGenerator(
-            samplewise_center=True,
-            samplewise_std_normalization=True,
-            horizontal_flip=True,
-            data_format='channels_first',
-            rescale=1./255)
-
+**Note** `train_generator` is assigned once, outside of any looping operations. If the iterator has stateful dependencies, it will be regenerated numerous times in the dataflow graph, leading to inefficiency and the possiblity that only some of the training examples will be pulled by the iterator.
 ```
 
-We next create a wrapper function for `flow_from_directory`. As stated
-earlier, this method will return an iterator over the dataset. 
-The purpose of using a wrapper function is to maintain code cleanliness
-when the callable `flow_from_directory` will need to be passed to other
-functions (will be more clear below). The arguments are as follows
-
- * `DIRS.train` - The directory to flow from
- * `target_size` - Shape of outputs from iterator
- * `batch_size` - Batching
- * `class_mode='sparse'` - Give an integer for label class, rather than a one
- hot vector
-
- **Note:** When using `class_mode='sparse'`, loss functions should be sparse
- as well, ie `sparse_softmax_cross_entropy`. By default `categorical` will be
- used, which yields the full one-hot label vector. In such cases, do **not**
- use a sparse loss function. Ambiguous errors will be produced regarding the
- dimentionality of inputs to the loss function when training begins.
-
-We can also call the generator method to see a message on the number of
-examples and classes found.
+We can pull a few images from the generator to examine the effects of our
+preprocessing operations.
 
 ```python
-# Wrap flow_from_directory in simple callable
-def generator():
+def plot_images(img_iter, rows=2, cols=2):
+    fig=plt.figure(figsize=(8, 8))
+    img_iter = img_iter[:rows*cols]
+    for i, img in enumerate(img_iter):
+        fig.add_subplot(rows, cols, i+1)
+        plt.imshow(img)
+    plt.show()
+    return img_iter
 
-    return train_datagen.flow_from_directory(
-            DIRS.train,
-            target_size=inputs.shape[2:4].as_list(),
-            batch_size=1,
-            class_mode='sparse')
+img_bat, label_bat = train_generator.next()
+_ = plot_images(img_bat)
 ```
+## Writing `.tfrecord` files
 
-Now we have a function `generator()` that returns an iterator over the
-training dataset. The iterator yields correctly batched groups of training
-images / labels, with preprocessing already applied. Finally, we will
-use this generator to produce a `Dataset` object. Note that there are 
-other approaches where the generator can be used without this wrapping.
+We write `.tfrecord` files by serializing features and labels to binary 
+strings and writing those strings to appropriate files. Specifically,
+we do the following:
 
-After wrapping we can verify the shapes and types of the `Dataset` are
-as expected (with batching on the first dimension).
+ 1. Wrap the iterator we just created into a `Dataset` using `from_generator()`
+ 2. Constrain the dataset to a finite size, as iterators loop indefinitely
+ 3. Use `flat_map` to flatten out batching produced by the iterator
+ 4. Serialize the image and label tensors to binary string
+ 5. Pack those binary strings into an `Example` which can be serialized to
+    a string representing the complete training example
+ 6. Write the serialized example to a file
 
-```python
-with shard_graph.as_default():
-    output_types = inputs.dtype, labels.dtype
-    ds_train = tf.data.Dataset.from_generator(
-            generator,
-            output_types=output_types)
-```
-
-### Writing `.tfrecord` Files
-
-Finally, we can produce `.tfrecord` files for our `Dataset`.
-Tensorflow provides some nice high level APIs to handle writing
-TFRecords given a dataset. Writingn the TFRecords will consist of
-the following steps
-
- 1. Use `Dataset.shard()` to create a dataset with 1/`num_shards`
- elements
- 2. Use `tf.serialize_tensor()` to serialize the input and label
- tensors for each training example in the shard
- 3. Concatenate the string contents of these two serialized tensors
- into a single string tensor
- 4. Write the resulting tensor to a `.tfrecord` file.
-
-**Note** the code below only builds a graph representing the flow
-of operations from the raw training set to the shard files. The graph
-must be run later
+First we define the graph of these operations as follows
 
 ```python
 
+def _bytes_feature(value):
+    return tf.train.Feature(bytes_list=tf.train.BytesList(value=[value]))
 
-with shard_graph.as_default():
-    def serialize_tensor_tuple(img, label):
-        """Serializes input/label tensors"""
-        #img = tf.squeeze(img, axis=0)
-        #label = tf.squeeze(label, axis=0)
-        img_s = tf.serialize_tensor(img)
-        label_s = tf.serialize_tensor(label)
-        return tf.string_join([img_s, label_s])
-
-    def write_shard(num):
-        filename = tf.strings.format(TFRECORD.file_format, num)
-        shard = serialized.shard(TFRECORD.num_shards, num)
-        writer = TFRecordWriter(filename)
-        writer.write(shard)
-        #with tf.control_dependencies([writer.write(shard)]):
-        return tf.strings.format(TFRECORD.file_format, num)
-
-
-    # Serialize training examples to binary strings
-    serialized = ds_train.map(
-            serialize_tensor_tuple, 
-            num_parallel_calls=8)
-
-    # Tensor over range of shards
-    shard_index = tf.range(TFRECORD.num_shards, dtype=tf.int64)
-    out = tf.map_fn(write_shard, shard_index, dtype=tf.string)
-```
-
-```python
-with shard_graph.as_default():
-    with tf.Session().as_default():
-        #shard_session.run(shard_files)
-        x = out.eval()
-
-        #print('Processing shard %i / %i' % (current_shard+1, TFRECORD.num_shards))
-        #print('Path: %s' % filepath)
-
-```
-
-```python
-# A method to extract an example from a record file
-def parse_record(example_proto, clip=False):
-
-    # The features contained in the written TFRecord
-    tfrecord_read_features = {
-           'image': tf.FixedLenFeature(shape=[], dtype=tf.string),
-           'label': tf.FixedLenFeature(shape=[], dtype=tf.string)
+def serialize_example(img, label):
+    # Dict of features for the serialized Example
+    feature = {
+        'img': _bytes_feature(img),
+        'label': _bytes_feature(label),
     }
 
-    example = tf.parse_single_example(example_proto, tfrecord_read_features)
-    img = tf.decode_raw(example['image'], tf.float32)
-    label = tf.decode_raw(example['label'], tf.float32)
+    # Serialize and return
+    example_proto = tf.train.Example(features=tf.train.Features(feature=feature))
+    return example_proto.SerializeToString()
 
-    img = tf.reshape(img, inputs.shape[1:4])
-    label = tf.reshape(label, (1,))
-    label = tf.squeeze(label)
-    label = tf.cast(label, int32)
+def serialize_tensors(img, label):
+    # Serialize the image and label tensors
+    serial_img = tf.serialize_tensor(img)
+    label = tf.serialize_tensor(label)
+
+    tf_string = tf.py_func(
+        serialize_example, 
+        (serial_img, label),  
+        tf.string)      
+    return tf.reshape(tf_string, ())
+
+#count = tf.Variable(0, dtype=tf.int32)
+
+_ = tf.data.Dataset.from_generator(
+        lambda : train_generator,
+        output_types=(tf.float32, tf.uint8)
+)
+_ = _.take(len(train_generator))
+_ = _.flat_map( lambda x, y : tf.data.Dataset.from_tensor_slices((x,y)))
+raw_data = _.map(serialize_tensors, num_parallel_calls=8)
+```
+
+And then we execute this graph. This operation may take a long time, and
+the shard files may be large. In total the dataset grew to over a gigabyte
+even when using compression.
+
+```python
+with tf.Session() as session:
+    file_list = []
+    for shard_index in range(FLAGS.num_shards):
+        filename = FLAGS.tfrecord_fmt.format(shard_index)
+        writer = TFRecordWriter(filename, compression_type=FLAGS.compression)
+        shard = raw_data.shard(FLAGS.num_shards, shard_index)
+        print('Writing shard %i / %i' % (shard_index+1, FLAGS.num_shards))
+        session.run(writer.write(shard))
+        file_list.append(filename)
+
+    print('Wrote files:')
+    for f in file_list:
+        print('  |-- %s' % os.path.basename(f))
+
+```
+
+## Reading `.tfrecord` files
+
+We essentially perform the reverse of the serialization operations used to
+write the records.
+
+```python
+# The features to extract from a record
+
+def deserialize_example(example):
+    features = {
+           'img': tf.FixedLenFeature(shape=[], dtype=tf.string),
+           'label': tf.FixedLenFeature(shape=[], dtype=tf.string)
+    }
+    example = tf.parse_single_example(example, features)
+    img, label = example['img'], example['label']
+
+    img = tf.parse_tensor(img, tf.float32)
+    img = tf.reshape(img, FLAGS.input_shape)
+
+    label = tf.parse_tensor(label, tf.uint8)
+    label = tf.reshape(label, ())
     return img, label
+
+# Construct a dataset of serialized records
+filenames = tf.data.Dataset.list_files(FLAGS.tfrecord_fmt.format('*'))
+_ = tf.data.TFRecordDataset(filenames, compression_type=FLAGS.compression)
+
+# Deserialize dataset to original tensors
+_ = _.map(deserialize_example)
+
+# Select training/validation sets with skip/take
+# Repeat to create a looping dataset
+# Batch as desired
+ds_train = _.skip(FLAGS.val_size)
+            .repeat()
+            .batch(FLAGS.batch_size)
+
+ds_val = _.take(FLAGS.val_size)
+        .repeat()
+        .batch(FLAGS.batch_size)
 ```
+
+We can then verify that we are reconstructing sane images
 
 ```python
-```
-```python
-
-# Construct a TFRecordDataset mapped over all shards
-filenames = tf.data.Dataset.list_files(TFRECORD.train_glob)
-ds_train = tf.data.TFRecordDataset(filenames).map(parse_record)
-ds_train = ds_train.shuffle(TRAIN.shuffle)
-ds_train = ds_train.batch(TRAIN.batch_size)
-ds_train
-```
-
-
-
-
-```python
-def make_shards():
-
-    def _bytes_feature(value):
-        return tf.train.Feature(bytes_list=tf.train.BytesList(value=[value]))
-    def _int64_feature(value):
-        return tf.train.Feature(bytes_list=tf.train.BytesList(value=[value]))
-
-    dataset_iterator = generator()
-    print('Writing %i shards...' % TFRECORD.num_shards)
-
-    for shard, batch in enumerate(dataset_iterator):
-        if shard > TFRECORD.num_shards: break
-        filepath = TFRECORD.file_format % shard
-        print('  |-- %s' % os.path.basename(filepath))
-
-        with tf.python_io.TFRecordWriter(filepath) as writer:
-
-            for img, label in zip(batch[0], batch[1]):
-
-                feature = {
-                    'image': _bytes_feature(img.tostring()),
-                    'label': _bytes_feature(label.tostring()),
-                }
-                
-                features=tf.train.Features(feature=feature)
-                example = tf.train.Example(features=features)
-                writer.write(example.SerializeToString())
-
-make_shards()
+with tf.Session() as session:
+    _ = ds_val.take(1).map(
+        lambda x, y : tf.py_func(
+            plot_images,
+            [x],
+            tf.float32
+        )
+    )
+    session.run(_.make_one_shot_iterator().get_next())
 ```
 
-But for the validation and testing sets the `ImageDataGenerator`
-expects directory for each label. We must manually fix labels
 
-# Problem 4 <a name="p4"></a>
-Understood
-
-# Problem 5 - Modifying Resnet <a name="p5"></a>
+## Building the Model
 
 We can construct Resnet using a subclassed approach. This involves
 creating modular blocks of layers that can be reused as needed, thus
@@ -383,10 +404,58 @@ between layers. This method takes an input as a parameter and returns
 an ouput that represents the feature maps after a forward pass through
 all layers in the block.
 
-## Basic Block <a name="basic"></a>
+The training state needed by layers like batch-norm is passed via
+`**kwargs` in `call()`. Names are used for layers where possible to
+simply debugging.
 
-First we will define the fundamental CNN style 2D convolution block
-of Resnet, ie
+## Tail
+
+We can begin by constructing the tail.
+
+```python
+class Tail(tf.keras.Model):
+
+    def __init__(self, Ni, *args, **kwargs):
+        super(Tail, self).__init__(*args, **kwargs)
+
+        # Big convolution layer
+        self.conv = layers.Conv2D(
+                Ni,
+                (7, 7),
+                padding='same',
+                data_format=FLAGS.data_format,
+                use_bias=False,
+                name='tail_conv')
+
+        # Tail BN
+        self.bn = layers.BatchNormalization(
+                name='tail_bn')
+
+        # Tail BN
+        self.relu = layers.ReLU(name='tail_relu')
+
+        # Max pooling layer
+        self.pool = layers.MaxPool2D(
+                Ni,
+                (2, 2),
+                padding='same',
+                data_format=FLAGS.data_format,
+                name='tail_pool')
+
+    def call(self, inputs, **kwargs):
+
+        # Residual forward pass
+        _ = self.conv(inputs, **kwargs)
+        _ = self.bn(_, **kwargs)
+        _ = self.relu(_, **kwargs)
+        return self.pool(_, **kwargs)
+
+```
+
+## Basic Block 
+
+Next we define the fundamental CNN style 2D convolution block
+of Resnet, ie batch-norm, relu, convolution.
 
 Note that the number of filters and the kernel size are 
 parameterized, and that parameter packs `*args, **kwargs`
@@ -405,7 +474,7 @@ class ResnetBasic(tf.keras.Model):
                 filters,
                 kernel_size,
                 padding='same',
-                data_format='channels_last',
+                data_format=FLAGS.data_format,
                 activation=None,
                 use_bias=False,
                 strides=strides)
@@ -416,14 +485,9 @@ class ResnetBasic(tf.keras.Model):
         return self.conv2d(x, **kwargs)
 ```
 
-
 ## Standard Bottleneck
 
-Recognizing this, we can define a bottleneck layer. Again,
-the number of input feature maps is parameterized. 
-We no longer parameterize the kernel dimensions, as these
-are intrinsic to this type of block.
-
+From `ResnetBasic` we can build the bottleneck.
 
 ```python
 class Bottleneck(tf.keras.Model):
@@ -471,7 +535,7 @@ class SpecialBottleneck(Bottleneck):
                 Ni,
                 (1, 1),
                 padding='same',
-                data_format='channels_last',
+                data_format=FLAGS.data_format,
                 activation=None,
                 use_bias=False)
 
@@ -527,20 +591,16 @@ class Downsample(tf.keras.Model):
 
         # Merge residual and main
         return self.merge([main, res])
-
 ```
 
 ## Final Model
 
-Finally, we can assemble these blocks into the final model. Note
-that the tail and other simple layers are defined within the 
-Resnet model class, rather than being subclassed as we did
-with the other building blocks. This choice came down to the
-simplicity of tail and other non-subclassed layers.
-
-Also worth noting is the use of `layers.GlobalAveragePooling2D`. There
-is no `keras.layers.reduce_mean()` layer, but this operation represents
-global average pooling so we simply choose the correct layer class.
+Finally, we can assemble these blocks into the final model. 
+Note that `Keras` provides a variety of simple ways to tweak
+the model, such as adding regularization. In fact, one could
+probably construct the model and override layers as member variables
+to apply tweaks without altering the main class. Subclassing is
+another option.
 
 ```python
 class Resnet(tf.keras.Model):
@@ -553,13 +613,7 @@ class Resnet(tf.keras.Model):
         self.blocks = list()
 
         # Tail
-        self.tail = layers.Conv2D(
-                filters,
-                (3, 3),
-                padding='same',
-                data_format='channels_last',
-                use_bias=False,
-                name='tail')
+        self.tail = Tail(filters)
 
         # Special bottleneck layer with convolution on main path
         self.level_0_special = SpecialBottleneck(filters)
@@ -578,16 +632,20 @@ class Resnet(tf.keras.Model):
             self.blocks.append(layer) 
             filters *= 2
 
-        # encoder - level 2 special block x1
-        # input:  256 x   8 x 8
-        # output: 256 x   8 x 8
-        self.level2_batch_norm = layers.BatchNormalization()
-        self.level2_relu = layers.ReLU()
+        self.level2_batch_norm = layers.BatchNormalization(name='final_bn')
+        self.level2_relu = layers.ReLU(name='final_relu')
 
         # Decoder - global average pool and fully connected
         self.global_avg = layers.GlobalAveragePooling2D(
-                data_format='channels_last')
-        self.dense = layers.Dense(classes, 
+                data_format=FLAGS.data_format,
+                name='GAP' 
+                )
+
+        # Dense with regularizer, just as a test
+        self.dense = layers.Dense(
+                classes, 
+                name='dense',
+                kernel_regularizer=tf.keras.regularizers.l2(0.01),
                 use_bias=True)
 
 
@@ -626,103 +684,111 @@ integer for the number of repeats at level 3 to our constructor call.
 Similarly, we can scale the number of feature maps as needed to adjust
 width.
 
-Lastly we will provide the number of classes in Tiny Imagenet, ie $200$.
 
 ```python
-# Add another level
+# As seen in CIFAR
 standard_levels = [4, 6, 3]
+
+# Add our new level
 new_level_count = 2
 modified_levels = standard_levels + [new_level_count]
 
-# Define full and half width feature map count
-full_width = 64
-half_width = full_width / 2
-
-# Tiny Imagenet properties
-
-
-model = Resnet(TRAIN.num_classes, full_width, modified_levels)
+model = Resnet(FLAGS.num_classes, FLAGS.width, modified_levels)
 outputs = model(inputs)
 ```
 
 Note that `model` returned by our class constructor is callable.
 Thus our forward pass mapping inputs to outputs is invoked by
 "calling" `model` on the inputs and storing the returned outputs.
-Note that a call on model is simply calling the 
-`Resnet.call()` method we wrote earlier. More on this when we get
-to training.
+The operation above defines this flow of information as part of
+a computational graph but does not carry out operations yet.
 
-Finally, we can build the model for the appropriate input shape
-and get a summary of the included layers
+Finally, we can get a summary of model
 
 ```python
 model.summary()
 ```
-# Problem 6 - Saving Validation
 
-Now we can construct a training loop with the following additional
-features
+## Training Prep
 
- * Saving validation loss/accuracy on a per epoch basis
- * Checkpointing after each epoch with ability to restore from 
-   checkpoint
-
-First we will define training hyperparameters to be used later on
+We define an accuracy and loss metric, as well as an optimizer.
+The model is then compiled before execution.
 
 ```python
+metrics = ['sparse_categorical_accuracy']
 
-```
+# Need wrapper to cast argmax labels from float to int?
+def ssce(labels, logits, *args, **kwargs):
+    labels = tf.cast(labels, tf.int32)
+    return tf.losses.sparse_softmax_cross_entropy(labels, logits)
+loss = ssce
 
-## Defining Metrics
-
-Next we define an accuracy and loss metric, as well as an optimizer
-
-```python
-# accuracy
-metrics = ['accuracy']
-
-# loss
-loss = softmax_xent
-#loss = 'categorical_crossentropy'
-
-# optimizer
-optimizer = tf.train.AdamOptimizer()
+optimizer = tf.train.AdamOptimizer(
+        learning_rate=FLAGS.lr_initial
+)
 
 model.compile(optimizer=optimizer, loss=loss, metrics=metrics)
 ```
 
-Checkpointing and whatnot
+We can optionally add callbacks to handle checkpointing, learning rate
+changes, and other operations.
 
 ```python
-checkpoint_path = os.path.join(DIRS.checkpoint, TRAIN.checkpoint_fmt)
+checkpoint = ModelCheckpoint(
+        filepath=FLAGS.chkpt_fmt, 
+        period=1,
+        save_weights_only=True
+)
+
 callbacks = [ 
-        ModelCheckpoint(filepath=checkpoint_path, save_weights_only=True),
-        #ProgbarLogger(),
+        checkpoint
 ]
 ```
 
+We can conduct a few sanity checks before starting the training
+process. Let us evaluate our untrained model and examine the accuracy.
+We know that there are 200 labels, so by random guessing we expect an
+accuracy of about 1/200.
+
 ```python
-step_size = 100000 * TFRECORD.num_shards // TRAIN.batch_size
-model.fit(
+z = model.evaluate(ds_val, steps=10)
+_, _ = z
+expect = 1. / FLAGS.num_classes
+print('Expected: %0.3f, actual: %0.3f' % (expect, _))
+```
+
+## Training
+
+First we will check for checkpoints from which we can initialize weights.
+If none were found this may be a good place to apply some other
+initialization strategy.
+
+```python
+_ = FLAGS.chkpt_fmt.format(epoch=0)
+_ = os.path.dirname(_)
+checkpoint_dir_contents = sorted(os.listdir(_))
+if checkpoint_dir_contents:
+    print('Trying checkpoint %s' % checkpoint_dir_contents[0])
+    model.load_weights(checkpoint_dir_contents[0])
+else:
+    print('No checkpoint files found')
+```
+
+And now we begin the training loop. Statistics and progress will be
+printed regularly. The call to `model.fit()` will return a history with
+metrics over the epochs.
+
+```python
+steps_per_epoch = (FLAGS.num_train-FLAGS.val_size) // FLAGS.batch_size
+
+history = model.fit(
         ds_train,
-        #callbacks=callbacks,
-        steps_per_epoch=step_size,
-        epochs=TRAIN.num_epochs)
-```
-
-```python
-#for x, y in ds_train.take(1):
-    #print(y.shape)
-    #y.shape
-steps_per_epoch
-128*72
-```
-
-```python
-flops = tf.profiler.profile(options = tf.profiler.ProfileOptionBuilder.float_operation())
-mem = tf.profiler.profile(options = tf.profiler.ProfileOptionBuilder.time_and_memory())
-if flops is not None:
-    print('Calculated FLOP', flops.total_float_ops)
-if mem is not None:
-    print(mem)
+        epochs=FLAGS.num_epochs,
+        callbacks=callbacks,
+        validation_data=ds_val,
+        shuffle=True,
+        steps_per_epoch=steps_per_epoch,
+        validation_steps=FLAGS.val_size // FLAGS.batch_size
+)
+print(history)
 ```
