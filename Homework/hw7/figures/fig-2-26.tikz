@@ -1,0 +1,7 @@
+\begin{tikzpicture}
+	\node (dx) at (3, 0) {$\frac{\partial e}{\partial x}$};
+	\node[draw, rectangle] (dfx) at (4, 0) {$f(x)$};
+	\node (dy) at (5, 0) {$\frac{\partial e}{\partial y}$};
+	\path[draw, ->] (dy) -- (dfx) -- (dx);
+	\path[draw, ->] (dy) |- (4, 0.5) -| (dx);
+\end{tikzpicture}
