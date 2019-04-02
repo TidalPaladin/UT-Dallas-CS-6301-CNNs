@@ -1,0 +1,220 @@
+% ---------
+%  Compile with "pdflatex hw1".
+% --------
+%!TEX TS-program = pdflatex
+%!TEX encoding = UTF-8 Unicode
+
+% Template borrowed from Jeff Erickson.
+
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}		% Allow some non-ASCII Unicode in source
+\usepackage{jeffe, handout,graphicx}
+\usepackage{forest}
+\usepackage{mathtools}
+\usepackage{subfigure}
+\usepackage{pgffor}
+\usepackage{etoolbox}
+\setlength\parindent{0pt}
+\newcommand{\bs}[1]{\boldsymbol{#1}}
+
+\newcommand{\matmul}[2]{
+	\bs{A}_{#1,0}\cdot\bs{B}_{0,#2}
+	\foreach \i in {1, ..., 3}{
+		+\bs{A}_{#1,\i}\cdot\bs{B}_{\i,#2}
+	}
+}
+
+%letter, start
+\newcommand{\StrassD}[3]{
+	\numdef\lowR{#2}
+	\numdef\highR{#2+1}
+	\numdef\lowC{#3}
+	\numdef\highC{#3+1}
+	\begin{bmatrix}
+		#1_{\lowR, \lowC} & #1_{\lowR, \highC} \\
+		#1_{\highR, \lowC} & #1_{\highR, \highC} \\
+	\end{bmatrix}
+}
+
+%matrix, startr, startc, letterA, letterB
+\newcommand{\StrassM}[5]{
+	\numdef\lowr{#2}
+	\numdef\highr{#2+1}
+	\numdef\lowc{#3}
+	\numdef\highc{#3+1}
+	\ifnumequal{#1}{1}{
+		\left(#4_{\lowr,\lowc} + #4_{\highr,\highc}\right)
+		\left(#5_{\lowr,\lowc}+#5_{\highr,\highc}\right)
+	}{}
+	\ifnumequal{#1}{2}{
+		\left(#4_{\highr,\lowc} + #4_{\highr,\highc}\right)
+		#5_{\lowr,\lowc}
+	}{}
+	\ifnumequal{#1}{3}{
+		#4_{\lowr,\lowc}
+		\left(#5_{\lowr,\highc}-#5_{\highr,\highc}\right)
+	}{}
+	\ifnumequal{#1}{4}{
+		#4_{\highr,\highc}
+		\left(#5_{\highr,\lowc}-#5_{\lowr,\lowc}\right)
+	}{}
+	\ifnumequal{#1}{5}{
+		\left(#4_{\lowr,\lowc} + #4_{\lowr,\highc}\right)
+		#5_{\highr,\highc}
+	}{}
+	\ifnumequal{#1}{6}{
+		\left(#4_{\highr,\lowc} - #4_{\lowr,\lowc}\right)
+		\left(#5_{\lowr,\lowc}+#5_{\lowr,\highc}\right)
+	}{}
+	\ifnumequal{#1}{7}{
+		\left(#4_{\lowr,\highc} - #4_{\highr,\highc}\right)
+		\left(#5_{\highr,\lowc}+#5_{\highr,\highc}\right)
+	}{}
+}
+
+%matrix, start, startc, letterOut, letterIn
+\newcommand{\StrassC}[5]{
+	\numdef\lowr{#2}
+	\numdef\highr{#2+1}
+	\numdef\lowc{#3}
+	\numdef\highc{#3+1}
+	\ifnumequal{#1}{1}{
+		#4_{\lowr,\lowc} &= #5_1 + #5_4 - #5_5 + #5_7
+	}{}
+	\ifnumequal{#1}{2}{
+		#4_{\lowr,\highc} &= #5_3 + #5_5
+	}{}
+	\ifnumequal{#1}{3}{
+		#4_{\highr,\lowc} &= #5_2 + #5_4
+	}{}
+	\ifnumequal{#1}{4}{
+		#4_{\highr,\highc} &= #5_1 - #5_2 + #5_3 + #5_6
+	}{}
+}
+
+%start, letterA, letterB
+\newcommand{\StrassAll}[3]{
+	\foreach \i in {1, ..., 7}{
+		\bs{M}_\i &= \StrassM{\i}{#1}{#2}{#3}
+	}
+}
+
+
+% =========================================================
+%   Define common stuff for solution headers
+% =========================================================
+\Class{CS 6301.503}
+\Semester{Spring 2019}
+\Authors{1}
+\AuthorOne{Scott C. Waggener}{scw180000}
+%\Section{}
+
+% =========================================================
+\begin{document}
+% ---------------------------------------------------------
+\HomeworkHeader{8 (Implementation)}{1}
+Readings
+% ---------------------------------------------------------
+
+\begin{solution}
+	Complete
+\end{solution}
+
+
+% ---------------------------------------------------------
+\HomeworkHeader{8 (Implementation)}{2}
+
+Write out all of the terms of Strassen based matrix matrix multiplication
+for $C = AB$ with BLAS dimensions $M = N = K = 4$ by applying the Strassen
+decomposition twice (an initial decomposition then a recursive
+decomposition)
+% ---------------------------------------------------------
+
+
+\begin{solution}
+	Recall that the Strassen matrix decomposition algorithm defines the
+	following new matrices.
+
+	\begin{align*}
+		&
+		\begin{aligned}
+			\bs{M}_1 &= \StrassM{1}{0}{0}{\bs{A}}{\bs{B}} \\
+			\bs{M}_2 &= \StrassM{2}{0}{0}{\bs{A}}{\bs{B}} \\
+			\bs{M}_3 &= \StrassM{3}{0}{0}{\bs{A}}{\bs{B}} \\
+			\bs{M}_4 &= \StrassM{4}{0}{0}{\bs{A}}{\bs{B}} \\
+			\bs{M}_5 &= \StrassM{5}{0}{0}{\bs{A}}{\bs{B}} \\
+			\bs{M}_6 &= \StrassM{6}{0}{0}{\bs{A}}{\bs{B}} \\
+			\bs{M}_7 &= \StrassM{7}{0}{0}{\bs{A}}{\bs{B}}
+		\end{aligned}
+		&\text{where}&
+		&
+		\begin{aligned}
+			\StrassC{1}{0}{0}{\bs{C}}{\bs{M}} \\
+			\StrassC{2}{0}{0}{\bs{C}}{\bs{M}} \\
+			\StrassC{3}{0}{0}{\bs{C}}{\bs{M}} \\
+			\StrassC{4}{0}{0}{\bs{C}}{\bs{M}}
+		\end{aligned}
+		&
+	\end{align*}
+
+	We begin by applying a partition over $\bs{C}$ into four block
+	matrices
+
+	\begin{align*}
+		\bs{C} = \StrassD{\bs{C}}{0}{0}
+	\end{align*}
+
+	where the block matrices are given by
+
+	\begin{align*}
+		\begin{aligned}
+			\bs{C}_{0, 0} &= \StrassD{A}{0}{0} \cdot \StrassD{B}{0}{0} \\
+			\bs{C}_{0, 1} &= \StrassD{A}{0}{2} \cdot \StrassD{B}{0}{2}
+		\end{aligned}
+		&&
+		\begin{aligned}
+			\bs{C}_{1, 0} &= \StrassD{A}{2}{0} \cdot \StrassD{B}{2}{0} \\
+			\bs{C}_{1, 1} &= \StrassD{A}{2}{2} \cdot \StrassD{B}{2}{2}
+		\end{aligned}
+	\end{align*}
+
+	Next we recursively compute the matrix multiplications in this
+	decomposition. Note the use of non-bold symbols reflecting that we
+	are now working with scalar elements at this level of recursion.
+	\newline
+
+	\foreach \i in {0, 1}{
+		\foreach \j in {0, 1}{
+			\numdef\reali{2*\i}
+			\numdef\realj{2*\j}
+
+			For $\bs{C}_{\i, \j}$ we have
+
+			\begin{align*}
+				&
+				\begin{aligned}
+					M_1 &= \StrassM{1}{\reali}{\realj}{A}{B} \\
+					M_2 &= \StrassM{2}{\reali}{\realj}{A}{B} \\
+					M_3 &= \StrassM{3}{\reali}{\realj}{A}{B} \\
+					M_4 &= \StrassM{4}{\reali}{\realj}{A}{B} \\
+					M_5 &= \StrassM{5}{\reali}{\realj}{A}{B} \\
+					M_6 &= \StrassM{6}{\reali}{\realj}{A}{B} \\
+					M_7 &= \StrassM{7}{\reali}{\realj}{A}{B}
+				\end{aligned}
+				&\text{where}&
+				&
+				\begin{aligned}
+					\StrassC{1}{\reali}{\realj}{C}{M} \\
+					\StrassC{2}{\reali}{\realj}{C}{M} \\
+					\StrassC{3}{\reali}{\realj}{C}{M} \\
+					\StrassC{4}{\reali}{\realj}{C}{M}
+				\end{aligned}
+				&
+			\end{align*}
+		}
+	}
+
+\end{solution}
+
+
+\end{document}
